@@ -1,13 +1,14 @@
 #VRML_SIM R2021a utf8
 WorldInfo {
-  basicTimeStep 4
+  basicTimeStep 16
+  FPS 30
   coordinateSystem "NUE"
   gpsCoordinateSystem "WGS84"
-  gpsReference 135 35 0
+  gpsReference 135.924 35.0494 0
 }
 Viewpoint {
-  orientation 0.5320471236481618 0.8456396548009424 0.04265480565962596 6.094139777946267
-  position -0.35831770355689335 1.0928591689940368 2.364581197774435
+  orientation 0.24577629028991793 0.9678395479678625 0.05367144977256931 5.839354199469855
+  position -2.813899960704478 1.802012519349077 6.328894811978552
   follow "biwako-x"
   followType "None"
 }
@@ -64,7 +65,7 @@ Floor {
 }
 DEF BIWAKO-X Robot {
   translation 0 0.58 0
-  rotation 0 1 0 -0.785395307179586
+  rotation 0 1 0 0.785401
   children [
     DEF BODY Solid {
       children [
@@ -470,12 +471,12 @@ DEF BIWAKO-X Robot {
   }
   physics Physics {
     density -1
-    mass 2.51
+    mass 2.6
     centerOfMass [
-      0 -0.05 0
+      0 -0.1 0
     ]
     inertiaMatrix [
-      0.04385139745635754 0.003926990816987243 0.04385139745635754
+      1 1 1
       0 0 0
     ]
     damping Damping {
