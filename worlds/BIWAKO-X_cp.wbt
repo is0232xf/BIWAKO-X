@@ -1,0 +1,651 @@
+#VRML_SIM R2021a utf8
+WorldInfo {
+  basicTimeStep 16
+  FPS 30
+  coordinateSystem "NUE"
+  gpsCoordinateSystem "WGS84"
+  gpsReference 135.924 35.0494 0
+}
+Viewpoint {
+  orientation 0.9144206112078129 -0.39307838522788957 -0.09656256451112147 5.759345829204213
+  position 0.7913940366587258 12.122304366070919 23.12167421491744
+  follow "biwako-x"
+  followType "None"
+}
+TexturedBackground {
+}
+TexturedBackgroundLight {
+}
+DEF SWIMMING_POOL SolidPipe {
+  translation 0 0.25 0
+  height 1.5
+  radius 500
+  subdivision 144
+  appearance DEF DARK_BROWN PBRAppearance {
+    baseColor 0.501961 0.337255 0.2
+    roughness 1.1102230246251565e-16
+    metalness 0
+  }
+}
+DEF STILL_WATER Fluid {
+  translation 0 0.2 0
+  children [
+    DEF S Shape {
+      appearance DEF WATER_APPEARANCE PBRAppearance {
+        baseColor 0 0.501961 1
+        transparency 0.5
+        roughness 1.1102230246251565e-16
+        metalness 0
+      }
+      geometry Cylinder {
+        height 1
+        radius 500
+        subdivision 12
+      }
+    }
+  ]
+  name "swimming pool"
+  streamVelocity 0.23 0 0.07
+  boundingObject USE S
+  locked TRUE
+}
+DEF SWIMMING_POOL_BOTTOM Transform {
+  translation 0 0.02 0
+  children [
+    Shape {
+      appearance USE DARK_BROWN
+      geometry Cylinder {
+        height 0.02
+        radius 499
+        subdivision 24
+      }
+    }
+  ]
+}
+Floor {
+}
+DEF BIWAKO-X Robot {
+  translation 0 0.58 0
+  rotation 0 1 0 0.785401
+  children [
+    DEF BODY Solid {
+      children [
+        DEF BODY Shape {
+          appearance PBRAppearance {
+            baseColor 1 0 1
+            metalness 0
+          }
+          geometry Cylinder {
+            height 0.4
+            radius 0.05
+            subdivision 16
+          }
+        }
+      ]
+      name "body"
+      boundingObject USE BODY
+      physics Physics {
+        density -1
+        mass 1.5
+        centerOfMass [
+          0 -0.2 0
+        ]
+      }
+    }
+    DEF TH1 Transform {
+      translation 0.13 0.06 0
+      rotation 1 9.58979e-09 1.88117e-06 -1.5707953071795862
+      children [
+        Propeller {
+          shaftAxis 0 1 0
+          thrustConstants 0.03 0.01
+          torqueConstants 0.0005 1
+          device DEF MOTOR1 RotationalMotor {
+            name "thruster1"
+            acceleration 10000
+            consumptionFactor 1
+            controlPID 10000 0 0
+            maxVelocity 20
+            maxTorque 30
+          }
+          fastHelix Solid {
+            children [
+              DEF PROP Shape {
+                appearance PBRAppearance {
+                  baseColor 1 0 0
+                  metalness 0
+                }
+                geometry Cylinder {
+                  height 0.075
+                  radius 0.01
+                }
+              }
+            ]
+          }
+          slowHelix Solid {
+            children [
+              USE PROP
+            ]
+          }
+        }
+      ]
+    }
+    DEF TH4 Transform {
+      translation -0.13 0.06 0
+      rotation -4.6356318433936376e-07 0.707106281186096 0.7071072811864936 3.14159
+      children [
+        Propeller {
+          shaftAxis 0 1 0
+          thrustConstants 0.03 0.01
+          torqueConstants 0.0005 1
+          device DEF MOTOR4 RotationalMotor {
+            name "thruster4"
+            acceleration 10000
+            controlPID 10000 0 0
+            maxVelocity 20
+            maxTorque 30
+          }
+          fastHelix Solid {
+            children [
+              DEF PROP Shape {
+                appearance PBRAppearance {
+                  baseColor 1 0 0
+                  metalness 0
+                }
+                geometry Cylinder {
+                  height 0.075
+                  radius 0.01
+                }
+              }
+            ]
+          }
+          slowHelix Solid {
+            rotation 0 0 1 3.14159
+            children [
+              USE PROP
+            ]
+          }
+        }
+      ]
+    }
+    DEF TH3 Transform {
+      translation 0 0.06 0.13
+      rotation 0.577349935856137 -0.577349935856137 -0.5773509358560258 -2.0943853071795866
+      children [
+        Propeller {
+          shaftAxis 0 1 0
+          thrustConstants 0.03 0.01
+          torqueConstants -0.0005 -1
+          device DEF MOTOR3 RotationalMotor {
+            name "thruster3"
+            acceleration 10000
+            consumptionFactor 0
+            controlPID 10000 0 0
+            maxVelocity 20
+            maxTorque 30
+          }
+          fastHelix Solid {
+            children [
+              DEF PROP Shape {
+                appearance PBRAppearance {
+                  baseColor 1 0 0
+                  metalness 0
+                }
+                geometry Cylinder {
+                  height 0.075
+                  radius 0.01
+                }
+              }
+            ]
+          }
+          slowHelix Solid {
+            children [
+              USE PROP
+            ]
+          }
+        }
+      ]
+    }
+    DEF TH2 Transform {
+      translation 0 0.06 -0.13
+      rotation 0.5773479358471216 0.5773479358471216 0.5773549358463438 -2.094395307179586
+      children [
+        Propeller {
+          shaftAxis 0 1 0
+          thrustConstants 0.03 0.01
+          torqueConstants -0.0005 -1
+          device DEF MOTOR2 RotationalMotor {
+            name "thruster2"
+            acceleration 10000
+            consumptionFactor 0
+            controlPID 10000 0 0
+            maxVelocity 20
+            maxTorque 30
+          }
+          fastHelix Solid {
+            children [
+              DEF PROP Shape {
+                appearance PBRAppearance {
+                  baseColor 1 0 0
+                  metalness 0
+                }
+                geometry Cylinder {
+                  height 0.075
+                  radius 0.01
+                }
+              }
+            ]
+          }
+          slowHelix Solid {
+            children [
+              USE PROP
+            ]
+          }
+        }
+      ]
+    }
+    DEF BUOY Solid {
+      translation 0.27 0.1 0
+      rotation 0 0 1 -1.5707953071795862
+      children [
+        DEF S_BUOY Shape {
+          appearance PBRAppearance {
+            baseColor 1 0.9 0
+            metalness 0
+          }
+          geometry Cylinder {
+            height 0.1
+            radius 0.035
+          }
+        }
+      ]
+      name "buoy"
+      immersionProperties [
+        DEF SWIMMING_POOL_IMMERSION_PROPERTIES ImmersionProperties {
+          fluidName "swimming pool"
+          dragForceCoefficients 0.1 0 0
+          dragTorqueCoefficients 0.001 0 0
+          viscousResistanceTorqueCoefficient 0.005
+        }
+      ]
+      boundingObject USE S_BUOY
+      physics DEF P_BUOY Physics {
+        density -1
+        mass 0.027
+        centerOfMass [
+          0 0.1 0
+        ]
+        damping Damping {
+        }
+      }
+    }
+    DEF BUOY Solid {
+      translation -0.27 0.1 0
+      rotation 0 0 1 -1.5707953071795862
+      children [
+        DEF S_BUOY Shape {
+          appearance PBRAppearance {
+            baseColor 1 0.9 0
+            metalness 0
+          }
+          geometry Cylinder {
+            height 0.1
+            radius 0.035
+          }
+        }
+      ]
+      name "buoy(1)"
+      immersionProperties [
+        DEF SWIMMING_POOL_IMMERSION_PROPERTIES ImmersionProperties {
+          fluidName "swimming pool"
+          dragForceCoefficients 0.1 0 0
+          dragTorqueCoefficients 0.001 0 0
+          viscousResistanceTorqueCoefficient 0.005
+        }
+      ]
+      boundingObject USE S_BUOY
+      physics DEF P_BUOY Physics {
+        density -1
+        mass 0.027
+        centerOfMass [
+          0 0.1 0
+        ]
+        damping Damping {
+        }
+      }
+    }
+    DEF BUOY Solid {
+      translation 0 0.1 0.27
+      rotation 0.5773509358560258 -0.577349935856137 -0.577349935856137 2.09439
+      children [
+        DEF S_BUOY Shape {
+          appearance PBRAppearance {
+            baseColor 1 0.9 0
+            metalness 0
+          }
+          geometry Cylinder {
+            height 0.1
+            radius 0.035
+          }
+        }
+      ]
+      name "buoy(2)"
+      immersionProperties [
+        DEF SWIMMING_POOL_IMMERSION_PROPERTIES ImmersionProperties {
+          fluidName "swimming pool"
+          dragForceCoefficients 0.1 0 0
+          dragTorqueCoefficients 0.001 0 0
+          viscousResistanceTorqueCoefficient 0.005
+        }
+      ]
+      boundingObject USE S_BUOY
+      physics DEF P_BUOY Physics {
+        density -1
+        mass 0.027
+        centerOfMass [
+          0 0.1 0
+        ]
+        damping Damping {
+        }
+      }
+    }
+    DEF BUOY Solid {
+      translation 0 0.1 -0.27
+      rotation 0.5773509358560258 -0.577349935856137 -0.577349935856137 2.09439
+      children [
+        DEF S_BUOY Shape {
+          appearance PBRAppearance {
+            baseColor 1 0.9 0
+            metalness 0
+          }
+          geometry Cylinder {
+            height 0.1
+            radius 0.035
+          }
+        }
+      ]
+      name "buoy(3)"
+      immersionProperties [
+        DEF SWIMMING_POOL_IMMERSION_PROPERTIES ImmersionProperties {
+          fluidName "swimming pool"
+          dragForceCoefficients 0.1 0 0
+          dragTorqueCoefficients 0.001 0 0
+          viscousResistanceTorqueCoefficient 0.005
+        }
+      ]
+      boundingObject USE S_BUOY
+      physics DEF P_BUOY Physics {
+        density -1
+        mass 0.027
+        centerOfMass [
+          0 0.1 0
+        ]
+        damping Damping {
+        }
+      }
+    }
+    DEF TH_BAR Solid {
+      translation 0 0.1 0.2
+      children [
+        DEF S_BAR Shape {
+          appearance PBRAppearance {
+          }
+          geometry Box {
+            size 0.015 0.015 0.3
+          }
+        }
+      ]
+    }
+    DEF TH_BAR Solid {
+      translation 0 0.1 -0.2
+      children [
+        DEF S_BAR Shape {
+          appearance PBRAppearance {
+          }
+          geometry Box {
+            size 0.015 0.015 0.3
+          }
+        }
+      ]
+      name "solid(1)"
+    }
+    DEF TH_BAR Solid {
+      translation 0.2 0.1 0
+      rotation 0 1 0 -1.5707953071795862
+      children [
+        DEF S_BAR Shape {
+          appearance PBRAppearance {
+          }
+          geometry Box {
+            size 0.015 0.015 0.3
+          }
+        }
+      ]
+      name "solid(2)"
+    }
+    DEF TH_BAR Solid {
+      translation -0.2 0.1 0
+      rotation 0 1 0 -1.5707953071795862
+      children [
+        DEF S_BAR Shape {
+          appearance PBRAppearance {
+          }
+          geometry Box {
+            size 0.015 0.015 0.3
+          }
+        }
+      ]
+      name "solid(3)"
+    }
+    DEF Sensor Solid {
+      children [
+        Compass {
+          translation 0 0.2 0
+          rotation 9.589809999941977e-09 -0.9999999999939495 3.4786599999789525e-06 -0.785395307179586
+          children [
+            Shape {
+              appearance PBRAppearance {
+              }
+              geometry Box {
+                size 0.01 0.01 0.01
+              }
+            }
+          ]
+        }
+        GPS {
+          translation 0 0.2 0
+          rotation 0 1 0 0.785398
+          children [
+            Shape {
+              appearance PBRAppearance {
+              }
+              geometry Box {
+                size 0.01 0.01 0.01
+              }
+            }
+          ]
+          noiseCorrelation 1
+        }
+      ]
+      name "Sensor"
+    }
+    DEF HEAD Solid {
+      translation 0.02 0.2 -0.02
+      children [
+        Shape {
+          appearance PBRAppearance {
+            baseColor 0 1 0.2
+            metalness 0
+          }
+          geometry Cylinder {
+            height 0.001
+            radius 0.01
+          }
+        }
+      ]
+      name "head"
+    }
+  ]
+  name "biwako-x"
+  immersionProperties [
+    DEF SWIMMING_POOL_IMMERSION_PROPERTIES ImmersionProperties {
+      fluidName "swimming pool"
+      dragForceCoefficients 0.1 0 0
+      dragTorqueCoefficients 0.001 0 0
+      viscousResistanceTorqueCoefficient 0.005
+    }
+  ]
+  boundingObject Group {
+    children [
+      USE BODY
+    ]
+  }
+  physics Physics {
+    density -1
+    mass 2.5
+    centerOfMass [
+      0 -0.1 0
+    ]
+    inertiaMatrix [
+      1 1 1
+      0 0 0
+    ]
+    damping Damping {
+    }
+  }
+  controller "Python_BIWAKO-X"
+  supervisor TRUE
+  battery [
+    0
+  ]
+}
+DEF BALL Solid {
+  translation 1.83 0.67 0
+  children [
+    DEF S_BALL Shape {
+      appearance PBRAppearance {
+        metalness 0
+      }
+      geometry Sphere {
+        radius 0.1
+      }
+    }
+  ]
+  name "ball"
+  immersionProperties [
+    USE SWIMMING_POOL_IMMERSION_PROPERTIES
+  ]
+  boundingObject USE S_BALL
+  physics Physics {
+    density -1
+    mass 1
+  }
+}
+DEF MARKER Solid {
+  children [
+    DEF S_MARKER Shape {
+      appearance PBRAppearance {
+        baseColor 1 1 0
+        metalness 0
+      }
+      geometry Cylinder {
+        height 0.1
+      }
+    }
+  ]
+}
+DEF MARKER Solid {
+  translation -10 0 0
+  children [
+    DEF S_MARKER Shape {
+      appearance PBRAppearance {
+        baseColor 1 0 0
+        metalness 0
+      }
+      geometry Cylinder {
+        height 0.1
+      }
+    }
+  ]
+  name "solid(1)"
+}
+DEF MARKER Solid {
+  translation -6.73174 0 6.13762
+  children [
+    DEF S_MARKER Shape {
+      appearance PBRAppearance {
+        baseColor 0.3 1 0.7
+        metalness 0
+      }
+      geometry Cylinder {
+        height 0.1
+        radius 3
+      }
+    }
+  ]
+  name "solid(2)"
+}
+DEF SHORE Solid {
+  translation 32.5335 0 -21.431
+  rotation 0 1 0 -3.1415853071795863
+  children [
+    DEF S_SHORE Shape {
+      appearance PBRAppearance {
+      }
+      geometry Box {
+        size 20 2 45
+      }
+    }
+  ]
+  name "shore(1)"
+  boundingObject USE S_SHORE
+}
+DEF SHORE Solid {
+  translation 79.2108 0 -48.4774
+  rotation 0 1 0 1.8326
+  children [
+    DEF S_SHORE Shape {
+      appearance PBRAppearance {
+      }
+      geometry Box {
+        size 20 2 110
+      }
+    }
+  ]
+  name "shore(2)"
+  boundingObject USE S_SHORE
+}
+DEF SHORE Solid {
+  translation 163.019 0 -81.0696
+  rotation 0 1 0 2.0944
+  children [
+    DEF S_SHORE Shape {
+      appearance PBRAppearance {
+      }
+      geometry Box {
+        size 20 2 75
+      }
+    }
+  ]
+  name "shore(3)"
+  boundingObject USE S_SHORE
+}
+DEF SHORE Solid {
+  translation 191.339 0 -166.7
+  rotation 0 1 0 -3.1415853071795863
+  children [
+    DEF S_SHORE Shape {
+      appearance PBRAppearance {
+      }
+      geometry Box {
+        size 20 2 150
+      }
+    }
+  ]
+  name "shore(4)"
+  boundingObject USE S_SHORE
+}
+Robot {
+  controller "Supervisor"
+  supervisor TRUE
+}

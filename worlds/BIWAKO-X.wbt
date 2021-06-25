@@ -4,11 +4,11 @@ WorldInfo {
   FPS 30
   coordinateSystem "NUE"
   gpsCoordinateSystem "WGS84"
-  gpsReference 135.924 35.0494 0
+  gpsReference 135.924 35.0495 0
 }
 Viewpoint {
-  orientation 0.24577629028991793 0.9678395479678625 0.05367144977256931 5.839354199469855
-  position -2.813899960704478 1.802012519349077 6.328894811978552
+  orientation 0.9531998448782317 -0.20390423045467881 -0.2232333320245885 4.574790838974456
+  position -9.73417176550754 31.893746890920468 -4.099260075924987
   follow "biwako-x"
   followType "None"
 }
@@ -39,12 +39,13 @@ DEF STILL_WATER Fluid {
       }
       geometry Cylinder {
         height 1
-        radius 499
+        radius 500
         subdivision 12
       }
     }
   ]
   name "swimming pool"
+  streamVelocity 0.1 0 0.1
   boundingObject USE S
   locked TRUE
 }
@@ -71,6 +72,7 @@ DEF BIWAKO-X Robot {
       children [
         DEF BODY Shape {
           appearance PBRAppearance {
+            baseColor 1 0 1
             metalness 0
           }
           geometry Cylinder {
@@ -86,7 +88,7 @@ DEF BIWAKO-X Robot {
         density -1
         mass 1.5
         centerOfMass [
-          0 -0.05 0
+          0 -0.2 0
         ]
       }
     }
@@ -96,13 +98,15 @@ DEF BIWAKO-X Robot {
       children [
         Propeller {
           shaftAxis 0 1 0
-          thrustConstants 0.7 0.1
-          torqueConstants 0 0
+          thrustConstants 0.03 0.01
+          torqueConstants 0.0005 1
           device DEF MOTOR1 RotationalMotor {
             name "thruster1"
+            acceleration 10000
             consumptionFactor 1
-            maxVelocity 50
-            maxTorque 1
+            controlPID 10000 0 0
+            maxVelocity 20
+            maxTorque 30
           }
           fastHelix Solid {
             children [
@@ -132,12 +136,14 @@ DEF BIWAKO-X Robot {
       children [
         Propeller {
           shaftAxis 0 1 0
-          thrustConstants 0.7 0.1
-          torqueConstants 0 0
+          thrustConstants 0.03 0.01
+          torqueConstants 0.0005 1
           device DEF MOTOR4 RotationalMotor {
             name "thruster4"
-            maxVelocity 50
-            maxTorque 1
+            acceleration 10000
+            controlPID 10000 0 0
+            maxVelocity 20
+            maxTorque 30
           }
           fastHelix Solid {
             children [
@@ -168,13 +174,15 @@ DEF BIWAKO-X Robot {
       children [
         Propeller {
           shaftAxis 0 1 0
-          thrustConstants 0.7 0.1
-          torqueConstants 0 0
-          device DEF MOOTOR3 RotationalMotor {
+          thrustConstants 0.03 0.01
+          torqueConstants -0.0005 -1
+          device DEF MOTOR3 RotationalMotor {
             name "thruster3"
+            acceleration 10000
             consumptionFactor 0
-            maxVelocity 50
-            maxTorque 1
+            controlPID 10000 0 0
+            maxVelocity 20
+            maxTorque 30
           }
           fastHelix Solid {
             children [
@@ -204,13 +212,15 @@ DEF BIWAKO-X Robot {
       children [
         Propeller {
           shaftAxis 0 1 0
-          thrustConstants 0.7 0.1
-          torqueConstants 0 0
+          thrustConstants 0.03 0.01
+          torqueConstants -0.0005 -1
           device DEF MOTOR2 RotationalMotor {
             name "thruster2"
+            acceleration 10000
             consumptionFactor 0
-            maxVelocity 50
-            maxTorque 1
+            controlPID 10000 0 0
+            maxVelocity 20
+            maxTorque 30
           }
           fastHelix Solid {
             children [
@@ -262,6 +272,8 @@ DEF BIWAKO-X Robot {
       physics DEF P_BUOY Physics {
         density -1
         mass 0.027
+        damping Damping {
+        }
       }
     }
     DEF BUOY Solid {
@@ -292,6 +304,8 @@ DEF BIWAKO-X Robot {
       physics DEF P_BUOY Physics {
         density -1
         mass 0.027
+        damping Damping {
+        }
       }
     }
     DEF BUOY Solid {
@@ -322,6 +336,8 @@ DEF BIWAKO-X Robot {
       physics DEF P_BUOY Physics {
         density -1
         mass 0.027
+        damping Damping {
+        }
       }
     }
     DEF BUOY Solid {
@@ -352,6 +368,8 @@ DEF BIWAKO-X Robot {
       physics DEF P_BUOY Physics {
         density -1
         mass 0.027
+        damping Damping {
+        }
       }
     }
     DEF TH_BAR Solid {
@@ -434,6 +452,7 @@ DEF BIWAKO-X Robot {
               }
             }
           ]
+          noiseCorrelation 1
         }
       ]
       name "Sensor"
@@ -471,7 +490,7 @@ DEF BIWAKO-X Robot {
   }
   physics Physics {
     density -1
-    mass 2.6
+    mass 2.5
     centerOfMass [
       0 -0.1 0
     ]
@@ -483,7 +502,122 @@ DEF BIWAKO-X Robot {
     }
   }
   controller "Python_BIWAKO-X"
+  supervisor TRUE
   battery [
     0
   ]
+}
+DEF BALL Solid {
+  translation -13.35 0.67 -3.15
+  children [
+    DEF S_BALL Shape {
+      appearance PBRAppearance {
+        metalness 0
+      }
+      geometry Sphere {
+        radius 0.1
+      }
+    }
+  ]
+  name "ball"
+  immersionProperties [
+    USE SWIMMING_POOL_IMMERSION_PROPERTIES
+  ]
+  boundingObject USE S_BALL
+  physics Physics {
+    density -1
+    mass 1
+  }
+}
+DEF MARKER Solid {
+  children [
+    DEF S_MARKER Shape {
+      appearance PBRAppearance {
+        baseColor 1 1 0
+        metalness 0
+      }
+      geometry Cylinder {
+        height 0.1
+      }
+    }
+  ]
+}
+DEF MARKER Solid {
+  translation -10 0 0
+  children [
+    DEF S_MARKER Shape {
+      appearance PBRAppearance {
+        baseColor 1 0 0
+        metalness 0
+      }
+      geometry Cylinder {
+        height 0.1
+      }
+    }
+  ]
+  name "solid(1)"
+}
+DEF SHORE Solid {
+  translation 32.5335 0 -21.431
+  rotation 0 1 0 -3.1415853071795863
+  children [
+    DEF S_SHORE Shape {
+      appearance PBRAppearance {
+      }
+      geometry Box {
+        size 20 2 45
+      }
+    }
+  ]
+  name "shore(1)"
+  boundingObject USE S_SHORE
+}
+DEF SHORE Solid {
+  translation 79.2108 0 -48.4774
+  rotation 0 1 0 1.8326
+  children [
+    DEF S_SHORE Shape {
+      appearance PBRAppearance {
+      }
+      geometry Box {
+        size 20 2 110
+      }
+    }
+  ]
+  name "shore(2)"
+  boundingObject USE S_SHORE
+}
+DEF SHORE Solid {
+  translation 163.019 0 -81.0696
+  rotation 0 1 0 2.0944
+  children [
+    DEF S_SHORE Shape {
+      appearance PBRAppearance {
+      }
+      geometry Box {
+        size 20 2 75
+      }
+    }
+  ]
+  name "shore(3)"
+  boundingObject USE S_SHORE
+}
+DEF SHORE Solid {
+  translation 191.339 0 -166.7
+  rotation 0 1 0 -3.1415853071795863
+  children [
+    DEF S_SHORE Shape {
+      appearance PBRAppearance {
+      }
+      geometry Box {
+        size 20 2 150
+      }
+    }
+  ]
+  name "shore(4)"
+  boundingObject USE S_SHORE
+}
+Robot {
+  controller "Supervisor"
+  supervisor TRUE
 }
