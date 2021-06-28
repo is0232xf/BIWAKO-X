@@ -3,13 +3,12 @@
 # You may need to import some classes of the controller module. Ex:
 #  from controller import Robot, Motor, DistanceSensor
 import sys
-
-from numpy.testing._private.utils import print_assert_equal
 sys.path.append('../')
 
 import random
 import csv
 import math
+import datetime
 import mpu
 import robot_controller as controller
 import numpy as np
@@ -17,10 +16,14 @@ import calculate_degree as calculator
 from controller import Supervisor
 from const import parameter
 
+
+now = datetime.datetime.now()
+str_date = now.strftime("%Y%m%d%H%M")
+
 # create the Robot instance.
 robot = Supervisor()
 robot_node = robot.getFromDef("BIWAKO-X")
-pos = robot_node.getField("translation") # type Field
+pos = robot_node.getField("translation") #+ type Field
 fluid_node = robot.getFromDef("STILL_WATER") # type Node
 stream_vel = fluid_node.getField("streamVelocity") # type Field
 parameter = parameter()
@@ -96,13 +99,11 @@ control_mode = parameter.control_mode
 
 # Main loop:
 def main(control_mode, filename):
-    def calc_Watt(V, A):
-        T = 4
-        if control_mode == 2:
-            T = 2
+    def calc_Watt(V, A, thruster_direction):
+        T_count = 4 - thruster_direction.count(0)
         dt = 0.001 # 1[msec] = 0.001[sec]
         c_W = 3.0 # c_W means constant consumed energy by main computer
-        W = T * (V * A * dt) + c_W * dt# unit Watt sec, 4 means use four thrusters
+        W = T_count * (V * A * dt) + c_W * dt# unit Watt sec, 4 means use four thrusters
         return W
 
     distance_torelance = parameter.main_target_distance_torelance
@@ -118,7 +119,7 @@ def main(control_mode, filename):
     P = 0.0
 
     if parameter.data_log_mode == True:
-        filename = "./result/" + filename + ".csv"
+        filename = "./result/" + str_date + filename + ".csv"
         f = open(filename, 'a', newline='')
         csvWriter = csv.writer(f)
         csvWriter.writerow(['count', 'latitude', 'longitude', 'W', 'P'])
@@ -140,6 +141,7 @@ def main(control_mode, filename):
         
         distance = round(mpu.haversine_distance(current_point, next_goal), 5)*1000
         diff_distance.append(distance)
+
         if diff_distance[-1] <= distance_torelance:
             if strategy == 1:
                 if is_First == 0:
@@ -147,7 +149,7 @@ def main(control_mode, filename):
                 temp_flag = 0
                 next_goal = target_point[0]
                 distance_torelance = parameter.main_target_distance_torelance
-            thruster_dirction = [0, 0, 0, 0]
+            thruster_direction = [0, 0, 0, 0]
             thrust = 0.0
 
         if diff_distance[-1] > distance_torelance:
@@ -173,7 +175,7 @@ def main(control_mode, filename):
 
         # calculate E-energy
         A = calc_amp(thrust)
-        W = calc_Watt(V, A)
+        W = calc_Watt(V, A, thruster_direction)
         P = P + W
 
         count = count + 1

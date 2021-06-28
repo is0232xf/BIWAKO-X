@@ -14,7 +14,6 @@ parameter = parameter()
 
 fluid_node = supervisor.getFromDef("STILL_WATER") # type Node
 stream_vel = fluid_node.getField("streamVelocity") # type Field
-vel = [[0.1, 0.0, 0.1], [0.1, 0.0, -0.1], [-0.1, 0.0, -0.1], [-0.1, 0.0, 0.1]]
 
 step = 0
 min_duration = parameter.duration # duration time[minutes]
@@ -27,8 +26,8 @@ z = 0
 
 while supervisor.step(timestep) != 1:
     if step % (total_step/10) == 0:
-        x = round(random.uniform(-1.0, 1.0), 2)
-        z = round(random.uniform(-1.0, 1.0), 2)
+        x = round(random.uniform(-0.5, 0.5), 2)
+        z = round(random.uniform(-0.5, 0.5), 2)
         st_vel = [x, 0.0, z]
         stream_vel.setSFVec3f(st_vel)
 

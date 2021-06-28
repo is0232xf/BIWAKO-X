@@ -9,10 +9,10 @@ class parameter:
 		self.V = 12.0
 
 		# ROBOT CONTROL PARAMETER
-		self.distance_Kp = 3.0
+		self.distance_Kp = 5.0
 		self.distance_Kd = 0.1
-		self.degree_Kp = 0.12
-		self.degree_Kd = 1.7
+		self.degree_Kp = 0.15
+		self.degree_Kd = 10
 		self.MAX_THRUST = 20.0
 		self.TIME_STEP = 16
 		# WAY POINT
@@ -36,6 +36,6 @@ class parameter:
 		# OTHER
 		self.main_target_distance_torelance = 3.0
 		self.temp_target_distance_torelance = 1.0
-		self.head_torelance = 20.0
+		self.head_torelance = 25.0
 		self.duration = 30 # [min]
 		self.total_step = return_total_step(self)
