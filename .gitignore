@@ -104,5 +104,6 @@ venv.bak/
 .mypy_cache/
 
 # ignore result data(csv, jpg) files
-.csv
-.jpg
+*.csv
+*.jpg
+/result/
