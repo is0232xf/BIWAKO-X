@@ -7,8 +7,8 @@ WorldInfo {
   gpsReference 135.924 35.0494 0
 }
 Viewpoint {
-  orientation 0.9144206112078129 -0.39307838522788957 -0.09656256451112147 5.759345829204213
-  position 0.7913940366587258 12.122304366070919 23.12167421491744
+  orientation 0.7576878819868176 -0.6151316268533461 -0.21799576861738873 5.408665375857615
+  position 5.583772854331227 14.79049868539854 18.30552118083653
   follow "biwako-x"
   followType "None"
 }
@@ -45,7 +45,7 @@ DEF STILL_WATER Fluid {
     }
   ]
   name "swimming pool"
-  streamVelocity 0.23 0 0.07
+  streamVelocity -0.27 0 -0.22
   boundingObject USE S
   locked TRUE
 }

@@ -106,5 +106,6 @@ venv.bak/
 # ignore result data(csv, jpg) files
 *.csv
 *.jpg
-*.wbproj
-/result/
+*.png
+/*.wbproj
+result/

@@ -34,7 +34,7 @@ class parameter:
 		# 0:SIMPLE STRATEGY, 1:FLEX STRATEGY
 
 		# OTHER
-		self.main_target_distance_torelance = 3.0
+		self.main_target_distance_torelance = 1.0
 		self.temp_target_distance_torelance = 1.0
 		self.head_torelance = 25.0
 		self.duration = 30 # [min]

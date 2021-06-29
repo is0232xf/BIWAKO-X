@@ -202,6 +202,9 @@ def main(control_mode, filename):
             robot.setLabel(4, power_label, 0.5, 0.4, 0.1, 0x00FF00, 0, "Arial")
 
 # main loop
+control_mode = 0
+main(control_mode, "strict")
+"""""
 for control_mode in range(4):
     if control_mode == 0:
         filename = "vertical"
@@ -216,3 +219,4 @@ for control_mode in range(4):
     robot.simulationSetMode(2) # First mode
     robot.simulationResetPhysics()
 robot.simulationSetMode(-1)
+"""""
