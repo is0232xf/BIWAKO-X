@@ -127,6 +127,7 @@ def main(control_mode, filename):
     count = 0.0
     temp_flag = 0
     is_First = 0
+
     while robot.step(TIME_STEP) != -1:
         gps_value = gps.getValues()
         compass_value = compass.getValues()
@@ -156,7 +157,6 @@ def main(control_mode, filename):
             if strategy == 0:
                 pass
             elif strategy == 1 and temp_flag == 0 and is_First == 1:
-                print("in")
                 temp_goal = calc_temp_goal(current_point, next_goal)
                 next_goal = temp_goal
                 distance_torelance = parameter.temp_target_distance_torelance
@@ -187,11 +187,7 @@ def main(control_mode, filename):
                 print("File close")
                 f.close()
                 robot.simulationSetMode(-1)
-                # robot.simulationResetPhysics()
-                # robot_node.restartController()
-                # robot.simulationReset()
                 count = 0
-                # robot.worldReload()
                 break
         
         if parameter.data_log_mode == True:
@@ -200,10 +196,10 @@ def main(control_mode, filename):
         if display_mode:
             power_label = "Comsumed energy: " + str('{:.2f}'.format(P)) + " [Ws]"
             robot.setLabel(4, power_label, 0.5, 0.4, 0.1, 0x00FF00, 0, "Arial")
-
+        
 # main loop
 control_mode = 0
-main(control_mode, "strict")
+main(control_mode, "flexible")
 """""
 for control_mode in range(4):
     if control_mode == 0:

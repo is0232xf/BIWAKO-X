@@ -19,8 +19,8 @@ class parameter:
 		self.way_point_file = './way_point/hirako_target.csv'
 
 		# MODE
-		self.data_log_mode = True
-		self.debug_mode = False
+		self.data_log_mode = False
+		self.debug_mode = True
 		self.state_display_mode = False
 
 		# CONTROL MODE
@@ -30,12 +30,12 @@ class parameter:
 		# 0:SIMPLE CONTROL, 1:PHASE CONTROL
 
 		# CONTROL STRATEGY
-		self.strategy = 0
+		self.strategy = 1
 		# 0:SIMPLE STRATEGY, 1:FLEX STRATEGY
 
 		# OTHER
-		self.main_target_distance_torelance = 1.0
-		self.temp_target_distance_torelance = 1.0
+		self.main_target_distance_torelance = 3.0
+		self.temp_target_distance_torelance = 1.5
 		self.head_torelance = 25.0
-		self.duration = 30 # [min]
+		self.duration = 10 # [min]
 		self.total_step = return_total_step(self)
