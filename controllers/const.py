@@ -9,7 +9,7 @@ class parameter:
 		self.V = 12.0
 
 		# ROBOT CONTROL PARAMETER
-		self.distance_Kp = 5.0
+		self.distance_Kp = 10.0
 		self.distance_Kd = 0.1
 		self.degree_Kp = 0.15
 		self.degree_Kd = 10
@@ -20,8 +20,9 @@ class parameter:
 
 		# MODE
 		self.data_log_mode = False
-		self.debug_mode = True
-		self.state_display_mode = False
+		self.debug_mode = False
+		self.state_display_mode = True
+		self.random_disturbance_mode = False
 
 		# CONTROL MODE
 		self.control_mode = 0
@@ -30,11 +31,11 @@ class parameter:
 		# 0:SIMPLE CONTROL, 1:PHASE CONTROL
 
 		# CONTROL STRATEGY
-		self.strategy = 1
+		self.strategy = 0
 		# 0:SIMPLE STRATEGY, 1:FLEX STRATEGY
 
 		# OTHER
-		self.main_target_distance_torelance = 3.0
+		self.main_target_distance_torelance = 1.0
 		self.temp_target_distance_torelance = 1.5
 		self.head_torelance = 25.0
 		self.duration = 10 # [min]
