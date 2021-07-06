@@ -11,8 +11,11 @@ import matplotlib.pyplot as plt
 from statistics import mean
 
 diff_distance = []
+earth_R = 6378137 # radius of the earth
 
-def calc_diff_longitude(target_lon, longitude, ex):
+def calc_diff_longitude(target_lon, latitude, longitude):
+    theta = mean(latitude)
+    ex = 360/(2*math.pi*earth_R*math.cos(theta*math.pi/180)) # keido, longitude 1[deg] = ex[m]
     start_longitude = target_lon
     diff_longitude = []
     for i in range(len(longitude)):
@@ -21,7 +24,8 @@ def calc_diff_longitude(target_lon, longitude, ex):
         diff_longitude.append(diff_m)
     return diff_longitude
 
-def calc_diff_latitude(target_lon, latitude, ey):
+def calc_diff_latitude(target_lon, latitude):
+    ey = 360/(2*math.pi*earth_R) # ido, latitude 1[deg] = ey[m]
     start_latitude = target_lon
     diff_latitude = []
     for i in range(len(latitude)):
@@ -83,13 +87,18 @@ def calc_mean_diff_distance(diff_longitude, diff_latitude):
     avg = mean(diff_distance)
     return avg
 
-def data_extraction(data_file):
+def pos_data_extraction(data_file):
     data = pd.read_csv(data_file, index_col=0)
-    longitude = data['longitude'].values.tolist()
-    latitude = data['latitude'].values.tolist()   
-    P = data['P'].values.tolist()
-    return longitude, latitude, P
+    a_longitude = data['a_longitude'].values.tolist()
+    a_latitude = data['a_latitude'].values.tolist()   
+    e_longitude = data['e_longitude'].values.tolist()
+    e_latitude = data['e_latitude'].values.tolist()
+    return a_longitude, a_latitude, e_longitude, e_latitude
 
+def p_data_extraction(data_file):
+    data = pd.read_csv(data_file, index_col=0)
+    P = data['P'].values.tolist()
+    return P
 
 if __name__ == '__main__':
     data = pd.read_csv("./3hour/202107011952strict.csv", index_col=0)

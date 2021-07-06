@@ -22,7 +22,7 @@ class parameter:
 		self.data_log_mode = True
 		self.debug_mode = False
 		self.state_display_mode = False
-		self.random_disturbance_mode = True
+		self.random_disturbance_mode = False
 
 		# CONTROL MODE
 		self.control_mode = 0
@@ -38,5 +38,5 @@ class parameter:
 		self.main_target_distance_torelance = 3.0
 		self.temp_target_distance_torelance = 1.5
 		self.head_torelance = 25.0
-		self.duration = 1 # [min]
+		self.duration = 10 # [min]
 		self.total_step = return_total_step(self)

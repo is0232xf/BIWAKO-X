@@ -47,8 +47,11 @@ thruster2.setPosition(float('+inf'))
 thruster3.setPosition(float('+inf'))
 thruster4.setPosition(float('+inf'))
 
-gps = robot.getDevice("gps")
-gps.enable(TIME_STEP)
+a_gps = robot.getDevice("a_gps")
+a_gps.enable(TIME_STEP)
+
+e_gps = robot.getDevice("e_gps")
+e_gps.enable(TIME_STEP)
 
 compass = robot.getDevice("compass")
 compass.enable(TIME_STEP)
@@ -147,25 +150,29 @@ def main(control_mode, filename, is_mkdir):
         f = open(csv_filename, 'a', newline='')
         log_param_data(param_file)
         csvWriter = csv.writer(f)
-        csvWriter.writerow(['count', 'latitude', 'longitude', 'W', 'P'])
+        csvWriter.writerow(['count', 'a_latitude', 'a_longitude', 'e_latitude', 'e_longitude', 'W', 'P'])
 
     count = 0.0
     temp_flag = 0
     is_First = 0
 
     while robot.step(TIME_STEP) != -1:
-        gps_value = gps.getValues()
+        a_gps_value = a_gps.getValues()
+        e_gps_value = e_gps.getValues()
         compass_value = compass.getValues()
         bearing = math.radians(get_bearing_in_degree(compass_value))
-        latitude = gps_value[1]
-        longitude = gps_value[0]
-        current_point = [latitude, longitude]
 
-        target_direction = math.radians(calculator.calculate_bearing(current_point, next_goal))
+        a_latitude = a_gps_value[1]
+        a_longitude = a_gps_value[0]
+        e_latitude = e_gps_value[1]
+        e_longitude = e_gps_value[0]
+        e_current_point = [e_latitude, e_longitude]
+
+        target_direction = math.radians(calculator.calculate_bearing(e_current_point, next_goal))
         deg =  math.degrees(calculator.limit_angle(target_direction - bearing))
         diff_deg.append(deg)
         
-        distance = round(mpu.haversine_distance(current_point, next_goal), 5)*1000
+        distance = round(mpu.haversine_distance(e_current_point, next_goal), 5)*1000
         diff_distance.append(distance)
         if diff_distance[-1] <= distance_torelance:
             if strategy == 1:
@@ -184,10 +191,10 @@ def main(control_mode, filename, is_mkdir):
             if strategy == 0:
                 pass
             elif strategy == 1 and temp_flag == 0 and is_First == 1:
-                temp_goal = calc_temp_goal(current_point, next_goal)
+                temp_goal = calc_temp_goal(e_current_point, next_goal)
                 next_goal = temp_goal
                 distance_torelance = parameter.temp_target_distance_torelance
-                distance = round(mpu.haversine_distance(current_point, next_goal), 5)*1000
+                distance = round(mpu.haversine_distance(e_current_point, next_goal), 5)*1000
                 temp_flag = 1
 
             if control_mode == 0:
@@ -218,7 +225,7 @@ def main(control_mode, filename, is_mkdir):
             break
         
         if parameter.data_log_mode == True:
-            csvWriter.writerow([count, latitude, longitude, W, P])
+            csvWriter.writerow([count, a_latitude, a_longitude, e_latitude, e_longitude, W, P])
 
         if display_mode:
             power_label = "Comsumed energy: " + str('{:.2f}'.format(P)) + " [Ws]"
@@ -254,27 +261,27 @@ for control_mode in range(4):
     robot.simulationResetPhysics()
 robot.simulationSetMode(-1)
 
-print(target_point[0])
 if parameter.data_log_mode == True:
-    earth_R = 6378137 # radius of the earth
-    ey = 360/(2*math.pi*earth_R) # ido, latitude 1[deg] = ey[m]
     csv_file_list = glob.glob("./result/" + str_date + "/*.csv")
-    P_list = []
+    P_list = []    
+    target = target_point[0]
+
     for file in csv_file_list:
-        longitude, latitude, P = plotter.data_extraction(file)
+        P = plotter.p_data_extraction(file)
         P_list.append(P[-1])
-    max_P = round(max(P_list), -2)
+    max_P = max(P_list) + 100
+    
     for file in csv_file_list:
-        longitude, latitude, P = plotter.data_extraction(file)  
-        theta = mean(latitude)
-        ex = 360/(2*math.pi*earth_R*math.cos(theta*math.pi/180)) # keido, longitude 1[deg] = ex[m]
+        a_longitude, a_latitude, e_longitude, e_latitude = plotter.pos_data_extraction(file)
+        P = plotter.p_data_extraction(file)
         
-        target = target_point[0]
-        
-        diff_longitude = plotter.calc_diff_longitude(target[1], longitude, ex)
-        diff_latitude = plotter.calc_diff_latitude(target[0], latitude, ey)
+        a_diff_longitude = plotter.calc_diff_longitude(target[1], a_latitude, a_longitude)
+        a_diff_latitude = plotter.calc_diff_latitude(target[0], a_latitude)
+        e_diff_longitude = plotter.calc_diff_longitude(target[1], e_latitude, e_longitude)
+        e_diff_latitude = plotter.calc_diff_latitude(target[0], e_latitude)
         p = r"\-(.*)\."
         title = re.findall(p, file)[0]
 
-        plotter.pos_plotter(str_date, title, diff_longitude, diff_latitude)
+        plotter.pos_plotter(str_date, "a_" + title, a_diff_longitude, a_diff_latitude)
+        plotter.pos_plotter(str_date, "e_" + title, e_diff_longitude, e_diff_latitude)
         plotter.power_plotter(str_date, title, P, max_P)
