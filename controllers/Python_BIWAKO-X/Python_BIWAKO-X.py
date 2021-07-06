@@ -5,16 +5,21 @@
 import sys
 sys.path.append('../')
 
+import os
+import re
 import random
 import csv
 import math
 import datetime
 import mpu
+import glob
+import plotter
 import robot_controller as controller
 import numpy as np
 import calculate_degree as calculator
 from controller import Supervisor
 from const import parameter
+from statistics import mean
 
 
 now = datetime.datetime.now()
@@ -81,7 +86,7 @@ def calc_amp(thrust):
 def calc_temp_goal(current_point, target_point):
     current_point = np.array([current_point])
     target_point = np.array([target_point])
-    temp_target = target_point-(current_point-target_point)/2
+    temp_target = target_point-(current_point-target_point)/1.5
     temp_target = [temp_target[0][0], temp_target[0][1]]
     return temp_target
 
@@ -95,10 +100,26 @@ def initialize():
     initial_point = [0.0, 0.58, 0.0]
     pos.setSFVec3f(initial_point)
 
+def log_param_data(filename):
+    f = open(filename, 'a')
+    control_mode = parameter.control_mode
+    strategy = parameter.strategy
+    main_target_distance_torelance = parameter.main_target_distance_torelance
+    temp_target_distance_torelance = parameter.temp_target_distance_torelance
+    head_torelance = parameter.head_torelance
+    duration = parameter.duration
+    f.write("CONTROL MODE: " + str(control_mode) + '\n')
+    f.write("STRATEGY: " + str(strategy) + '\n')
+    f.write("MAIN TORELANCE: " + str(main_target_distance_torelance) + '\n')
+    f.write("TEMP TORELANCE: " + str(temp_target_distance_torelance) + '\n')
+    f.write("HEAD TORELANCE: " + str(head_torelance) + '\n')
+    f.write("DURATION: " + str(duration) + '\n')
+    f.close()
 control_mode = parameter.control_mode
-
+debug_mode = parameter.debug_mode
+is_mkdir = True
 # Main loop:
-def main(control_mode, filename):
+def main(control_mode, filename, is_mkdir):
     def calc_Watt(V, A, thruster_direction):
         T_count = 4 - thruster_direction.count(0)
         dt = 0.001 # 1[msec] = 0.001[sec]
@@ -119,8 +140,12 @@ def main(control_mode, filename):
     P = 0.0
 
     if parameter.data_log_mode == True:
-        filename = "./result/" + str_date + filename + ".csv"
-        f = open(filename, 'a', newline='')
+        if is_mkdir == True:
+            os.mkdir('./result/' + str_date)
+        param_file = "./result/" + str_date + "/" + filename + ".txt"
+        csv_filename = "./result/" + str_date + "/" + str_date + "-" + filename + ".csv"
+        f = open(csv_filename, 'a', newline='')
+        log_param_data(param_file)
         csvWriter = csv.writer(f)
         csvWriter.writerow(['count', 'latitude', 'longitude', 'W', 'P'])
 
@@ -142,7 +167,6 @@ def main(control_mode, filename):
         
         distance = round(mpu.haversine_distance(current_point, next_goal), 5)*1000
         diff_distance.append(distance)
-
         if diff_distance[-1] <= distance_torelance:
             if strategy == 1:
                 if is_First == 0:
@@ -150,6 +174,9 @@ def main(control_mode, filename):
                 temp_flag = 0
                 next_goal = target_point[0]
                 distance_torelance = parameter.main_target_distance_torelance
+            if debug_mode == True:
+                print("STAY")
+
             thruster_direction = [0, 0, 0, 0]
             thrust = 0.0
 
@@ -188,7 +215,7 @@ def main(control_mode, filename):
                 f.close()
                 robot.simulationSetMode(-1)
                 count = 0
-                break
+            break
         
         if parameter.data_log_mode == True:
             csvWriter.writerow([count, latitude, longitude, W, P])
@@ -199,9 +226,20 @@ def main(control_mode, filename):
         
 # main loop
 control_mode = 0
-main(control_mode, "flexible")
-"""""
+main(control_mode, "flexible", is_mkdir)
+is_mkdir = False
+initialize()
+robot.simulationSetMode(2) # First mode
+robot.simulationResetPhysics()
+parameter.main_target_distance_torelance = 1.5
+parameter.strategy = 0
+main(control_mode, "strict", is_mkdir)
+initialize()
+robot.simulationSetMode(2) # First mode
+robot.simulationResetPhysics()
+parameter.main_target_distance_torelance = 3.0
 for control_mode in range(4):
+    parameter.control_mode = control_mode
     if control_mode == 0:
         filename = "vertical"
     elif control_mode == 1:
@@ -210,9 +248,33 @@ for control_mode in range(4):
         filename = "diagonal"
     elif control_mode == 3:
         filename = "oct_directional"
-    main(control_mode, filename)
+    main(control_mode, filename, is_mkdir)
     initialize()
     robot.simulationSetMode(2) # First mode
     robot.simulationResetPhysics()
 robot.simulationSetMode(-1)
-"""""
+
+print(target_point[0])
+if parameter.data_log_mode == True:
+    earth_R = 6378137 # radius of the earth
+    ey = 360/(2*math.pi*earth_R) # ido, latitude 1[deg] = ey[m]
+    csv_file_list = glob.glob("./result/" + str_date + "/*.csv")
+    P_list = []
+    for file in csv_file_list:
+        longitude, latitude, P = plotter.data_extraction(file)
+        P_list.append(P[-1])
+    max_P = round(max(P_list), -2)
+    for file in csv_file_list:
+        longitude, latitude, P = plotter.data_extraction(file)  
+        theta = mean(latitude)
+        ex = 360/(2*math.pi*earth_R*math.cos(theta*math.pi/180)) # keido, longitude 1[deg] = ex[m]
+        
+        target = target_point[0]
+        
+        diff_longitude = plotter.calc_diff_longitude(target[1], longitude, ex)
+        diff_latitude = plotter.calc_diff_latitude(target[0], latitude, ey)
+        p = r"\-(.*)\."
+        title = re.findall(p, file)[0]
+
+        plotter.pos_plotter(str_date, title, diff_longitude, diff_latitude)
+        plotter.power_plotter(str_date, title, P, max_P)

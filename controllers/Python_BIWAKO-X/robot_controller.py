@@ -8,28 +8,26 @@ parameter = parameter()
 MAX_THRUST = parameter.MAX_THRUST
 TIME_STEP = parameter.TIME_STEP
 distance_torelance = parameter.main_target_distance_torelance
+debug_mode = parameter.debug_mode
 
 def omni_control_action(diff_distance, diff_deg):
-    def determine_cmd(diff_distance, diff_deg):
+    def determine_cmd(diff_deg):
         cmd = 0
-        if diff_distance < distance_torelance:
-            cmd = 0
-        else:
-            if -45.0 <= diff_deg < 45:
-                cmd = 1
+        if -45.0 <= diff_deg < 45:
+            cmd = 1
 
-            elif -180.0 <= diff_deg < -135.0 or 135.0 <= diff_deg < 180.0:
-                cmd = 2
+        elif -180.0 <= diff_deg < -135.0 or 135.0 <= diff_deg < 180.0:
+            cmd = 2
 
-            elif 45.0 <= diff_deg < 135.0:
-                cmd = 3
+        elif 45.0 <= diff_deg < 135.0:
+            cmd = 3
 
-            elif -135.0 <= diff_deg < -45.0:
-                cmd = 4
+        elif -135.0 <= diff_deg < -45.0:
+            cmd = 4
         return cmd
     distance = diff_distance[-1]
     deg = diff_deg[-1]
-    cmd = determine_cmd(distance, deg)
+    cmd = determine_cmd(deg)
     thruster_direction = determine_thrust_direction(cmd)
     e_distance = diff_distance[-2] - diff_distance[-1]
     thrust = PD_distance_control(distance, e_distance)
@@ -38,20 +36,17 @@ def omni_control_action(diff_distance, diff_deg):
 def diagonal_control_action(diff_distance, diff_deg):
     def determine_cmd(diff_distance, diff_deg):
         cmd = 0
-        if diff_distance < distance_torelance:
-            cmd = 0
-        else:
-            if 0.0 <= diff_deg <90:
-                cmd = 7
+        if 0.0 <= diff_deg <90:
+            cmd = 7
 
-            elif -90 <= diff_deg < 0.0:
-                cmd = 8
+        elif -90 <= diff_deg < 0.0:
+            cmd = 8
 
-            elif -180 <= diff_deg < -90:
-                cmd = 9
+        elif -180 <= diff_deg < -90:
+            cmd = 9
 
-            elif 90 <= diff_deg < 180:
-                cmd = 10
+        elif 90 <= diff_deg < 180:
+            cmd = 10
         return cmd
     distance = diff_distance[-1]
     deg = diff_deg[-1]
@@ -94,38 +89,35 @@ def fixed_head_action(diff_distance, diff_deg):
     return thruster_direction, thrust
     
 def oct_directional_action(diff_distance, diff_deg):
-    def determine_cmd(diff_distance, diff_deg):
+    def determine_cmd(diff_deg):
         cmd = 0
-        if diff_distance < distance_torelance:
-            cmd = 0
-        else:
-            if -22.0 <= diff_deg <22.0:
-                cmd = 1
+        if -22.0 <= diff_deg <22.0:
+            cmd = 1
 
-            elif -180.0 <= diff_deg < -157.0 or 157.0 <= diff_deg <= 180.0:
-                cmd = 2
+        elif -180.0 <= diff_deg < -157.0 or 157.0 <= diff_deg <= 180.0:
+            cmd = 2
 
-            elif -112.0 <= diff_deg < -67.0:
-                cmd = 4
+        elif -112.0 <= diff_deg < -67.0:
+            cmd = 4
 
-            elif 67.0 <= diff_deg < 112.0:
-                cmd = 3
+        elif 67.0 <= diff_deg < 112.0:
+            cmd = 3
 
-            elif 22.0 <= diff_deg < 67.0:
-                cmd = 7
+        elif 22.0 <= diff_deg < 67.0:
+            cmd = 7
 
-            elif -67.0 <= diff_deg < -22.0:
-                cmd = 8
+        elif -67.0 <= diff_deg < -22.0:
+            cmd = 8
 
-            elif -157.0 <= diff_deg < -112.0:
-                cmd = 9
+        elif -157.0 <= diff_deg < -112.0:
+            cmd = 9
 
-            elif 112.0 <= diff_deg < 157.0:
-                cmd = 10
+        elif 112.0 <= diff_deg < 157.0:
+            cmd = 10
         return cmd
     distance = diff_distance[-1]
     deg = diff_deg[-1]
-    cmd = determine_cmd(distance, deg)
+    cmd = determine_cmd(deg)
     thruster_direction = determine_thrust_direction(cmd)
     e_distance = diff_distance[-2] - diff_distance[-1]
     thrust = PD_distance_control(distance, e_distance)
@@ -157,7 +149,7 @@ def determine_thrust_direction(cmd):
     elif cmd == 10:
         thruster_direction = [-1, 0, 0, 1]
 
-    if parameter.debug_mode == True:
+    if debug_mode == True:
         if cmd == 0:
             print("STAY")
         elif cmd == 1:

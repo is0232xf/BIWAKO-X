@@ -28,7 +28,9 @@ x_strength = [0.1, 0.2, 0.3, 0.4, 0.5, -0.1, -0.2, -0.3, -0.4, -0.5]
 z_strength = [0.1, 0.2, 0.3, 0.4, 0.5, -0.1, -0.2, -0.3, -0.4, -0.5]
 
 count = 0
+play_count = 0
 
+""""
 if log_mode == True:
     import csv
     import datetime
@@ -38,7 +40,7 @@ if log_mode == True:
     f = open(filename, 'a', newline='')
     csvWriter = csv.writer(f)
     csvWriter.writerow(['step', 'x', 'z'])
-
+"""
 while supervisor.step(timestep) != 1:
     if step % (total_step/10) == 0:
         if random_mode == True:
@@ -48,11 +50,19 @@ while supervisor.step(timestep) != 1:
             x = x_strength[count]
             z = z_strength[count]
             count = count + 1
+        if count == len(x_strength):
+            count = 0
+            play_count = play_count + 1
+            if play_count == 6:
+                break
+        """"
         if log_mode==True:
             csvWriter.writerow([step, x, z])
-            if count == len(x_strength)-1:
-                f.close()
-
+            print("Complete disturbance log")
+            f.close()
+        if count == len(x_strength):
+            break
+        """
         st_vel = [x, 0.0, z]
         stream_vel.setSFVec3f(st_vel)
 
