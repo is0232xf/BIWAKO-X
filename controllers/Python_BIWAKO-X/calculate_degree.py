@@ -69,3 +69,36 @@ def limit_angle(angle_in):
         angle_out *= -1
 
     return angle_out
+
+def get_bearing_in_degree(compass_value):
+    # convert rad to deg range[-180, 180]
+    north = compass_value[0]
+    east = compass_value[2]
+    rad = math.atan2(north, east)
+    bearing = rad/math.pi*180
+    return bearing
+
+
+def calc_amp(thrust):
+    thrust = abs(thrust)
+    power = thrust / 20
+    A = 4.3*power**2-1.08*power
+    # A = round(A, 2)
+    if power < 0.2:
+        A = 0.0
+    return A
+
+def calc_temp_goal(current_point, target_point):
+    current_point = np.array([current_point])
+    target_point = np.array([target_point])
+    temp_target = target_point-(current_point-target_point)/1.5
+    temp_target = [temp_target[0][0], temp_target[0][1]]
+    return temp_target
+
+
+def calc_Watt(V, A, thruster_direction, timestep):
+    T_count = 4 - thruster_direction.count(0) # count the number of used thrusters
+    dt = timestep/1000 # 1[msec] = 0.001[sec]
+    c_W = 3.0 # [W/s]c_W means constant consumed energy by main computer
+    W = T_count * ((V * A) * dt) + (c_W * dt)# unit Watt sec, 4 means use four thrusters
+    return W
