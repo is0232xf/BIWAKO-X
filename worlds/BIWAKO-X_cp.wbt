@@ -7,8 +7,8 @@ WorldInfo {
   gpsReference 135.924 35.0494 0
 }
 Viewpoint {
-  orientation 0.7576878819868176 -0.6151316268533461 -0.21799576861738873 5.408665375857615
-  position 5.583772854331227 14.79049868539854 18.30552118083653
+  orientation -0.011267316607930516 -0.9818666342054168 -0.18923784032424137 3.0253452837275465
+  position -4.897433495803167 7.253390266846586 -13.113105093641236
   follow "biwako-x"
   followType "None"
 }
@@ -45,7 +45,7 @@ DEF STILL_WATER Fluid {
     }
   ]
   name "swimming pool"
-  streamVelocity -0.27 0 -0.22
+  streamVelocity -0.18 0 -0.02
   boundingObject USE S
   locked TRUE
 }
@@ -72,7 +72,6 @@ DEF BIWAKO-X Robot {
       children [
         DEF BODY Shape {
           appearance PBRAppearance {
-            baseColor 1 0 1
             metalness 0
           }
           geometry Cylinder {
@@ -439,6 +438,9 @@ DEF BIWAKO-X Robot {
     }
     DEF Sensor Solid {
       children [
+        GPS {
+          name "a_gps"
+        }
         Compass {
           translation 0 0.2 0
           rotation 9.589809999941977e-09 -0.9999999999939495 3.4786599999789525e-06 -0.785395307179586
@@ -464,7 +466,9 @@ DEF BIWAKO-X Robot {
               }
             }
           ]
-          noiseCorrelation 1
+          name "e_gps"
+          accuracy 1.5
+          noiseCorrelation 0.5
         }
       ]
       name "Sensor"
@@ -519,28 +523,6 @@ DEF BIWAKO-X Robot {
     0
   ]
 }
-DEF BALL Solid {
-  translation 1.83 0.67 0
-  children [
-    DEF S_BALL Shape {
-      appearance PBRAppearance {
-        metalness 0
-      }
-      geometry Sphere {
-        radius 0.1
-      }
-    }
-  ]
-  name "ball"
-  immersionProperties [
-    USE SWIMMING_POOL_IMMERSION_PROPERTIES
-  ]
-  boundingObject USE S_BALL
-  physics Physics {
-    density -1
-    mass 1
-  }
-}
 DEF MARKER Solid {
   children [
     DEF S_MARKER Shape {
@@ -553,21 +535,6 @@ DEF MARKER Solid {
       }
     }
   ]
-}
-DEF MARKER Solid {
-  translation -10 0 0
-  children [
-    DEF S_MARKER Shape {
-      appearance PBRAppearance {
-        baseColor 1 0 0
-        metalness 0
-      }
-      geometry Cylinder {
-        height 0.1
-      }
-    }
-  ]
-  name "solid(1)"
 }
 DEF MARKER Solid {
   translation -6.73174 0 6.13762
@@ -586,33 +553,20 @@ DEF MARKER Solid {
   name "solid(2)"
 }
 DEF SHORE Solid {
-  translation 32.5335 0 -21.431
+  translation 13.1435 0 -21.431
   rotation 0 1 0 -3.1415853071795863
   children [
     DEF S_SHORE Shape {
       appearance PBRAppearance {
+        baseColor 0.5 0.5 0.5
+        metalness 0
       }
       geometry Box {
-        size 20 2 45
+        size 20 2 100
       }
     }
   ]
   name "shore(1)"
-  boundingObject USE S_SHORE
-}
-DEF SHORE Solid {
-  translation 79.2108 0 -48.4774
-  rotation 0 1 0 1.8326
-  children [
-    DEF S_SHORE Shape {
-      appearance PBRAppearance {
-      }
-      geometry Box {
-        size 20 2 110
-      }
-    }
-  ]
-  name "shore(2)"
   boundingObject USE S_SHORE
 }
 DEF SHORE Solid {
