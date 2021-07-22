@@ -82,7 +82,7 @@ def fixed_head_action(diff_distance, diff_deg):
         e_distance = diff_distance[-2] - diff_distance[-1]
         thrust = PD_distance_control(distance, e_distance)
     elif cmd == 5 or cmd == 6:
-        e_deg = diff_deg[-2] - diff_deg[-1]
+        e_deg = diff_deg[-1] - diff_deg[-2]
         thrust = PD_head_control(deg, e_deg)
     elif cmd == 0:
         thrust = 0
@@ -192,7 +192,7 @@ def PD_head_control(deg, e_deg):
     Kp = parameter.degree_Kp
     Kd = parameter.degree_Kd
 
-    thrust = Kp * deg - Kd * e_deg
+    thrust = Kp * deg + Kd * e_deg * (1/TIME_STEP)
 
     if abs(thrust) > MAX_THRUST:
         thrust = MAX_THRUST
