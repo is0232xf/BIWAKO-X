@@ -24,9 +24,13 @@ total_step = parameter.total_step
 timestep = parameter.TIME_STEP
 display_mode = parameter.state_display_mode
 
-x_strength = [0.1, 0.2, 0.3, 0.4, 0.5, -0.1, -0.2, -0.3, -0.4, -0.5]
-z_strength = [0.1, 0.2, 0.3, 0.4, 0.5, -0.1, -0.2, -0.3, -0.4, -0.5]
+x_strength = [0.1, 0.15, 0.2, 0.25, 0.3]
+z_strength = [0.1, 0.15, 0.2, 0.25, 0.3]
 
+"""
+x_strength = [0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55]
+z_strength = [0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55]
+"""
 count = 0
 play_count = 0
 
@@ -42,7 +46,7 @@ if log_mode == True:
     csvWriter.writerow(['step', 'x', 'z'])
 """
 while supervisor.step(timestep) != 1:
-    if step % (total_step/10) == 0:
+    if step % (total_step/len(x_strength)) == 0:
         if random_mode == True:
             x = round(random.uniform(-0.5, 0.5), 2)
             z = round(random.uniform(-0.5, 0.5), 2)
@@ -55,14 +59,6 @@ while supervisor.step(timestep) != 1:
             play_count = play_count + 1
             if play_count == 6:
                 break
-        """"
-        if log_mode==True:
-            csvWriter.writerow([step, x, z])
-            print("Complete disturbance log")
-            f.close()
-        if count == len(x_strength):
-            break
-        """
         st_vel = [x, 0.0, z]
         stream_vel.setSFVec3f(st_vel)
 
