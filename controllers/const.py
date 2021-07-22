@@ -9,12 +9,13 @@ class parameter:
 		self.V = 12.0
 
 		# ROBOT CONTROL PARAMETER
-		self.distance_Kp = 5.0
-		self.distance_Kd = 0.1
-		self.degree_Kp = 0.15
-		self.degree_Kd = 10
+		self.distance_Kp = 5.0 # 5.0
+		self.distance_Kd = 0.1 # 0.1
+		self.degree_Kp = 0.2
+		self.degree_Kd = 80
 		self.MAX_THRUST = 20.0
 		self.TIME_STEP = 16
+
 		# WAY POINT
 		self.way_point_file = './way_point/hirako_target.csv'
 
@@ -23,20 +24,20 @@ class parameter:
 		self.debug_mode = False
 		self.state_display_mode = False
 		self.random_disturbance_mode = False
+		self.gps_error_mode = False
 
 		# CONTROL MODE
 		self.control_mode = 0
 		# 0:OMNICONTROL MODE, 1:FIXED HEAD CONTROL MODE, 2: DIAGNALCONTROL MODE, 3: OCT-DIRECTIONAL
-		self.thruster_control = 0
-		# 0:SIMPLE CONTROL, 1:PHASE CONTROL
 
 		# CONTROL STRATEGY
-		self.strategy = 1
+		self.policy = 1
 		# 0:SIMPLE STRATEGY, 1:FLEX STRATEGY
 
 		# OTHER
 		self.main_target_distance_torelance = 3.0
 		self.temp_target_distance_torelance = 1.5
-		self.head_torelance = 25.0
-		self.duration = 10 # [min]
+		self.head_torelance = 5.0
+		self.duration = 1 # [min]
 		self.total_step = return_total_step(self)
+		self.workspace = 'C:/Users/is0232xf/OneDrive - 学校法人立命館/デスクトップ/exp/'
