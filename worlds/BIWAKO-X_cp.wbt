@@ -1,14 +1,14 @@
 #VRML_SIM R2021a utf8
 WorldInfo {
-  basicTimeStep 16
+  basicTimeStep 100
   FPS 30
   coordinateSystem "NUE"
   gpsCoordinateSystem "WGS84"
   gpsReference 135.924 35.0494 0
 }
 Viewpoint {
-  orientation -0.011267316607930516 -0.9818666342054168 -0.18923784032424137 3.0253452837275465
-  position -4.897433495803167 7.253390266846586 -13.113105093641236
+  orientation 1 0 0 4.71238898038469
+  position -6.193774554908053 30.95110395285196 4.931835381690464
   follow "biwako-x"
   followType "None"
 }
@@ -45,7 +45,7 @@ DEF STILL_WATER Fluid {
     }
   ]
   name "swimming pool"
-  streamVelocity -0.18 0 -0.02
+  streamVelocity 0.1 0 0
   boundingObject USE S
   locked TRUE
 }
@@ -467,7 +467,7 @@ DEF BIWAKO-X Robot {
             }
           ]
           name "e_gps"
-          accuracy 1.5
+          accuracy 1
           noiseCorrelation 0.5
         }
       ]

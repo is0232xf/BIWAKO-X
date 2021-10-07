@@ -14,7 +14,7 @@ class parameter:
 		self.degree_Kp = 0.2
 		self.degree_Kd = 80
 		self.MAX_THRUST = 20.0
-		self.TIME_STEP = 16
+		self.TIME_STEP = 100
 
 		# WAY POINT
 		self.way_point_file = './way_point/hirako_target.csv'
@@ -23,12 +23,15 @@ class parameter:
 		self.data_log_mode = True
 		self.debug_mode = False
 		self.state_display_mode = False
-		self.random_disturbance_mode = False
 		self.gps_error_mode = False
 
+		# DISTURBANCE PATTERN
+		self.disturbance_mode = 2
+		# 0: NO DISTURBANCE, 1: RANDOM DISTURBANCE, 2: STEP DISTURBANCE
+
 		# CONTROL MODE
-		self.control_mode = 0
-		# 0:OMNICONTROL MODE, 1:FIXED HEAD CONTROL MODE, 2: DIAGNALCONTROL MODE, 3: OCT-DIRECTIONAL
+		self.control_mode = 1
+		# 0:VERTICAL MODE, 1:DIAGNALCONTROL MODE, 2:FIXED HEAD CONTROL MODE , 3: OCT-DIRECTIONAL
 
 		# CONTROL STRATEGY
 		self.policy = 1
@@ -36,8 +39,8 @@ class parameter:
 
 		# OTHER
 		self.main_target_distance_torelance = 3.0
-		self.temp_target_distance_torelance = 1.5
+		self.temp_target_distance_torelance = 0.5
 		self.head_torelance = 5.0
-		self.duration = 1 # [min]
+		self.duration = 180 # [min]
 		self.total_step = return_total_step(self)
-		self.workspace = 'C:/Users/is0232xf/OneDrive - 学校法人立命館/デスクトップ/exp/'
+		self.workspace = 'C:/Users/Fujii/OneDrive - 学校法人立命館/デスクトップ/exp/'
