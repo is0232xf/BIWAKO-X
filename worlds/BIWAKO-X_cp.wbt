@@ -1,4 +1,4 @@
-#VRML_SIM R2021a utf8
+#VRML_SIM R2021b utf8
 WorldInfo {
   basicTimeStep 100
   FPS 30
@@ -7,8 +7,8 @@ WorldInfo {
   gpsReference 135.924 35.0494 0
 }
 Viewpoint {
-  orientation 1 0 0 4.71238898038469
-  position -6.193774554908053 30.95110395285196 4.931835381690464
+  orientation 0.11768519353348679 0.7397324137905564 0.6625301134368027 3.402892949178817
+  position -7.016477260561503 26.323603274992195 2.672300386863313
   follow "biwako-x"
   followType "None"
 }
@@ -45,7 +45,7 @@ DEF STILL_WATER Fluid {
     }
   ]
   name "swimming pool"
-  streamVelocity 0.1 0 0
+  streamVelocity 0.25 0 0
   boundingObject USE S
   locked TRUE
 }
@@ -537,7 +537,7 @@ DEF MARKER Solid {
   ]
 }
 DEF MARKER Solid {
-  translation -6.73174 0 6.13762
+  translation -5.93174 0 6.13762
   children [
     DEF S_MARKER Shape {
       appearance PBRAppearance {
