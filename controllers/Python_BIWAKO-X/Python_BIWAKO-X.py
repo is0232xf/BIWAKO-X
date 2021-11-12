@@ -202,7 +202,8 @@ def main(strategy, disturbance_mode, gps_error_mode, filename):
             if policy == 0:
                 pass
             elif policy == 1 and temp_flag == 0 and is_First == 1:
-                temp_goal = calculator.calc_temp_goal(current_point, next_goal)
+                k = 2
+                temp_goal = calculator.calc_temp_goal(k, current_point, next_goal)
                 next_goal = temp_goal
                 distance_torelance = temp_distance_torelance
                 distance = round(mpu.haversine_distance(current_point, next_goal), 5)*1000
@@ -269,7 +270,7 @@ gps_mode = parameter.gps_error_mode
 title = "Flexible"
 control_mode = 0
 policy = 1
-torelance = [3.0, 1.5]
+torelance = [3.0, 1.0]
 strategy = [control_mode, policy, torelance]
 main(strategy, disturbance_mode, gps_mode, title)
 initialize()
