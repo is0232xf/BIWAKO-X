@@ -23,10 +23,10 @@ class parameter:
 		self.data_log_mode = True
 		self.debug_mode = False
 		self.state_display_mode = False
-		self.gps_error_mode = False
+		self.gps_error_mode = True
 
 		# DISTURBANCE PATTERN
-		self.disturbance_mode = 2
+		self.disturbance_mode = 0
 		# 0: NO DISTURBANCE, 1: RANDOM DISTURBANCE, 2: STEP DISTURBANCE
 
 		# CONTROL MODE
@@ -39,8 +39,8 @@ class parameter:
 
 		# OTHER
 		self.main_target_distance_torelance = 3.0
-		self.temp_target_distance_torelance = 0.5
+		self.temp_target_distance_torelance = 1.5
 		self.head_torelance = 5.0
 		self.duration = 180 # [min]
 		self.total_step = return_total_step(self)
-		self.workspace = 'C:/Users/Fujii/OneDrive - 学校法人立命館/デスクトップ/exp/'
+		self.workspace = 'C:/Users/is0232xf/OneDrive - 学校法人立命館/Webots/BIWAKO-X_supervisor/controllers/Python_BIWAKO-X/result/'
