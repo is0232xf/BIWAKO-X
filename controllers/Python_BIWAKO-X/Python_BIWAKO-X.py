@@ -202,7 +202,7 @@ def main(strategy, disturbance_mode, gps_error_mode, filename):
             if policy == 0:
                 pass
             elif policy == 1 and temp_flag == 0 and is_First == 1:
-                k = 2
+                k = 0
                 temp_goal = calculator.calc_temp_goal(k, current_point, next_goal)
                 next_goal = temp_goal
                 distance_torelance = temp_distance_torelance
@@ -268,9 +268,9 @@ gps_mode = parameter.gps_error_mode
 
 # main() for Unit test
 title = "Flexible"
-control_mode = 0
+control_mode = 1
 policy = 1
-torelance = [3.0, 1.0]
+torelance = [3.0, 1.5]
 strategy = [control_mode, policy, torelance]
 main(strategy, disturbance_mode, gps_mode, title)
 initialize()
@@ -311,6 +311,8 @@ for title in path_list:
 robot.simulationSetMode(-1)
 """
 
+
+"""
 if parameter.data_log_mode == True:
     print("Finish the all simulation")
     time.sleep(3)
@@ -319,7 +321,6 @@ if parameter.data_log_mode == True:
     target = target_point[0]
     # make a power consumption file
     plotter.make_power_consumption_graph(csv_file_list, str_date)
-
     for file in csv_file_list:
         a_longitude, a_latitude, e_longitude, e_latitude = plotter.pos_data_extraction(file)
         a_diff_longitude = plotter.calc_diff_longitude(target[1], a_latitude, a_longitude)
@@ -328,11 +329,10 @@ if parameter.data_log_mode == True:
         e_diff_latitude = plotter.calc_diff_latitude(target[0], e_latitude)
         p = r"\_(.*)\."
         title = re.findall(p, file)[0]
-        """
             # 上から誤差なしのGPSで取得した値によるグラフ，誤差ありのGPSで取得した値によるグラフ，消費電力のグラフ
-            plotter.pos_plotter(str_date, "a_" + title, a_diff_longitude, a_diff_latitude)
-            plotter.pos_plotter(str_date, "e_" + title, e_diff_longitude, e_diff_latitude)
-            for count in range(len(a_diff_latitude)-time_width):
-                plotter.tiemseries_pos_plotter(str_date, title, a_diff_longitude[count:count+time_width], a_diff_latitude[count:count+time_width], count)
+            # plotter.pos_plotter(str_date, "a_" + title, a_diff_longitude, a_diff_latitude)
+            # plotter.pos_plotter(str_date, "e_" + title, e_diff_longitude, e_diff_latitude)
+            # for count in range(len(a_diff_latitude)-time_width):
+                # plotter.tiemseries_pos_plotter(str_date, title, a_diff_longitude[count:count+time_width], a_diff_latitude[count:count+time_width], count)
             
-        """
+"""
