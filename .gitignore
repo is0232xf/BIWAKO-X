@@ -107,5 +107,6 @@ venv.bak/
 *.csv
 *.jpg
 *.png
-/*.wbproj
+*.wbproj
+*.wbt
 result/
