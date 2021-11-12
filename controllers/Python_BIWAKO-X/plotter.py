@@ -70,6 +70,7 @@ def pos_plotter(str_date, title, diff_longitude, diff_latitude):
     plt.yticks(y_ticks)
     plt.title(title)
     plt.grid()
+    print(title)
     fig.savefig(workspace + str_date + "/pos_" + title + ".jpg")
     plt.clf()
     plt.close()

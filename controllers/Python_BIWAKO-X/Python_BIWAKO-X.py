@@ -225,7 +225,7 @@ def main(strategy, disturbance_mode, gps_error_mode, filename):
 
         if count % (total_step/5) == 0:
             if disturbance_mode == 0:
-                x = 0
+                x = 0.05
                 z = 0
             elif disturbance_mode == 1:
                 x = round(random.uniform(-0.3, 0.3), 2)
@@ -264,14 +264,20 @@ if parameter.data_log_mode == True:
 disturbance_mode = parameter.disturbance_mode
 gps_mode = parameter.gps_error_mode
 
+
 # main() for Unit test
-title = "Strict"
+title = "Flexible"
 control_mode = 0
-policy = 0
-torelance = [1.5, 0.0]
+policy = 1
+torelance = [3.0, 1.5]
 strategy = [control_mode, policy, torelance]
 main(strategy, disturbance_mode, gps_mode, title)
+initialize()
+robot.simulationSetMode(2) # First mode
+robot.simulationResetPhysics()
+robot.simulationSetMode(-1)
 
+"""
 # main() loop
 for title in path_list:
     d_count = 0
@@ -302,11 +308,12 @@ for title in path_list:
     robot.simulationSetMode(2) # First mode
     robot.simulationResetPhysics()
 robot.simulationSetMode(-1)
+"""
 
 if parameter.data_log_mode == True:
     print("Finish the all simulation")
     time.sleep(3)
-    csv_file_list = glob.glob(workspace + str_date + "/*.csv")
+    csv_file_list = glob.glob(workspace + str_date + "/" + str_date + "*.csv")
     P_list = []    
     target = target_point[0]
     # make a power consumption file
@@ -320,11 +327,11 @@ if parameter.data_log_mode == True:
         e_diff_latitude = plotter.calc_diff_latitude(target[0], e_latitude)
         p = r"\_(.*)\."
         title = re.findall(p, file)[0]
-
-        # 上から誤差なしのGPSで取得した値によるグラフ，誤差ありのGPSで取得した値によるグラフ，消費電力のグラフ
-        plotter.pos_plotter(str_date, "a_" + title, a_diff_longitude, a_diff_latitude)
-        plotter.pos_plotter(str_date, "e_" + title, e_diff_longitude, e_diff_latitude)
         """
-        for count in range(len(a_diff_latitude)-time_width):
-            plotter.tiemseries_pos_plotter(str_date, title, a_diff_longitude[count:count+time_width], a_diff_latitude[count:count+time_width], count)
+            # 上から誤差なしのGPSで取得した値によるグラフ，誤差ありのGPSで取得した値によるグラフ，消費電力のグラフ
+            plotter.pos_plotter(str_date, "a_" + title, a_diff_longitude, a_diff_latitude)
+            plotter.pos_plotter(str_date, "e_" + title, e_diff_longitude, e_diff_latitude)
+            for count in range(len(a_diff_latitude)-time_width):
+                plotter.tiemseries_pos_plotter(str_date, title, a_diff_longitude[count:count+time_width], a_diff_latitude[count:count+time_width], count)
+            
         """
