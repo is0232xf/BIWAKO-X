@@ -149,7 +149,7 @@ def acum_power_plot(count, data_list, label_list, color_list, disturbance):
     i = 0
     fig = plt.figure()
     ax = fig.add_subplot(1,1,1)
-    max_P =  226
+    max_P =  300
 
     for data in data_list:
         s = "solid"
@@ -162,11 +162,11 @@ def acum_power_plot(count, data_list, label_list, color_list, disturbance):
         i = i + 1
     xmax = count[-1]
     ymax = max_P
-    """
-    if parameter.disturbance_mode == 1 or 2:
-        for d in disturbance:
-            ax.vlines(d, 0, ymax, colors='pink', linestyle='dashed', linewidth=1)    
-    """
+    
+ 
+    for d in disturbance:
+        ax.vlines(d, 0, ymax, colors='pink', linestyle='dashed', linewidth=1)    
+    
     x_ticks = np.arange(0, xmax+(xmax/6)-1, xmax/6)
     plt.xticks(x_ticks)
     plt.xlim(0, xmax)
@@ -210,6 +210,22 @@ def tiemseries_pos_plotter(str_date, title, diff_longitude, diff_latitude, count
     plt.clf()
     plt.close()
 
+def make_any_timeseries_graph(csv_file):
+    df = pd.read_csv(csv_file, index_col=0)
+    
+    d1 = np.array(df[df.columns.values[0]].values.tolist())
+    d2 = np.array(df[df.columns.values[1]].values.tolist())
+    d3 = np.array(df[df.columns.values[2]].values.tolist())
+    d4 = np.array(df[df.columns.values[3]].values.tolist())
+    timestep = (100/1000)/60 # 秒単位の時TIME_STEP/1000, 分単位の時さらに/60
+    count_max_value = len(d1)*timestep
+    count = np.arange(0, int(count_max_value), timestep)
+    data_list = [d1, d2, d3, d4]
+    label_list = df.columns.values
+    color_list = ["green", "red", "blue", "orange", "black"]
+    disturbance_timing = np.arange(0, count_max_value, count_max_value/5)
+    acum_power_plot(count, data_list, label_list, color_list, disturbance_timing)
+
 if __name__ == '__main__':
-    path = 'C:/Users/is0232xf/OneDrive - 学校法人立命館/デスクトップ/exp/必要なデータ/Pattern A'
-    csv_file_list = path + ""
+    path = 'power_consumption.csv'
+    make_any_timeseries_graph(path)
