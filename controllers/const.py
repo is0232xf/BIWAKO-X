@@ -23,15 +23,15 @@ class parameter:
 		self.data_log_mode = True
 		self.debug_mode = False
 		self.state_display_mode = False
-		self.gps_error_mode = True
+		self.gps_error_mode = False
 
 		# DISTURBANCE PATTERN
-		self.disturbance_mode = 0
+		self.disturbance_mode = 2
 		# 0: NO DISTURBANCE, 1: RANDOM DISTURBANCE, 2: STEP DISTURBANCE
 
 		# CONTROL MODE
 		self.control_mode = 1
-		# 0:VERTICAL MODE, 1:DIAGNALCONTROL MODE, 2:FIXED HEAD CONTROL MODE , 3: OCT-DIRECTIONAL
+		# 0:FBLR MODE, 1:DIAGNALCONTROL MODE, 2:FIXED HEAD CONTROL MODE , 3: OCT-DIRECTIONAL
 
 		# CONTROL STRATEGY
 		self.policy = 1

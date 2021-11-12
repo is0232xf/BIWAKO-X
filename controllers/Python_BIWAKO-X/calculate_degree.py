@@ -78,7 +78,6 @@ def get_bearing_in_degree(compass_value):
     bearing = rad/math.pi*180
     return bearing
 
-
 def calc_amp(thrust):
     thrust = abs(thrust)
     power = (thrust / 20)*100
@@ -89,10 +88,10 @@ def calc_amp(thrust):
         A = 0.0
     return A
 
-def calc_temp_goal(current_point, target_point):
+def calc_temp_goal(k, current_point, target_point):
     current_point = np.array([current_point])
     target_point = np.array([target_point])
-    temp_target = target_point-(current_point-target_point)/2
+    temp_target = target_point-(current_point-target_point)*(k-1)
     temp_target = [temp_target[0][0], temp_target[0][1]]
     return temp_target
 
