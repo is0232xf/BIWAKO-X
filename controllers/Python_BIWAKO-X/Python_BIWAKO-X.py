@@ -14,7 +14,7 @@ import time
 import datetime
 import mpu
 import glob
-import plotter
+# import plotter
 import robot_controller as controller
 import numpy as np
 import pandas as pd
@@ -202,7 +202,7 @@ def main(strategy, disturbance_mode, gps_error_mode, filename):
             if policy == 0:
                 pass
             elif policy == 1 and temp_flag == 0 and is_First == 1:
-                k = 0
+                k = 1
                 temp_goal = calculator.calc_temp_goal(k, current_point, next_goal)
                 next_goal = temp_goal
                 distance_torelance = temp_distance_torelance
