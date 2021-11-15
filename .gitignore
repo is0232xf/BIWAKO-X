@@ -6,6 +6,13 @@ __pycache__/
 # C extensions
 *.so
 
+# ignore result data(csv, jpg) filess
+*.csv
+*.jpg
+*.png
+*.wbproj
+*.wbt
+
 # Distribution / packaging
 .Python
 build/
@@ -56,6 +63,9 @@ coverage.xml
 local_settings.py
 db.sqlite3
 
+#Const file
+*const.py
+
 # Flask stuff:
 instance/
 .webassets-cache
@@ -103,10 +113,4 @@ venv.bak/
 # mypy
 .mypy_cache/
 
-# ignore result data(csv, jpg) files
-*.csv
-*.jpg
-*.png
-*.wbproj
-*.wbt
 result/
