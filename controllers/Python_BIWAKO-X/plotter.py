@@ -149,7 +149,7 @@ def acum_power_plot(count, data_list, label_list, color_list, disturbance):
     i = 0
     fig = plt.figure()
     ax = fig.add_subplot(1,1,1)
-    max_P =  300
+    max_P =  800
 
     for data in data_list:
         s = "solid"
