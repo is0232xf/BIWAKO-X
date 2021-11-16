@@ -45,7 +45,7 @@ DEF STILL_WATER Fluid {
     }
   ]
   name "swimming pool"
-  streamVelocity 0.25 0 0
+  streamVelocity 0.05 0 0
   boundingObject USE S
   locked TRUE
 }
@@ -467,8 +467,7 @@ DEF BIWAKO-X Robot {
             }
           ]
           name "e_gps"
-          accuracy 1
-          noiseCorrelation 0.5
+          accuracy 0.5
         }
       ]
       name "Sensor"
