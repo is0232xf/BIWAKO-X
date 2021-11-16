@@ -98,7 +98,8 @@ def make_distance_log_file(path, m_a_diff_distance, m_t_diff_distance, m_diff_di
     f.close()
 
 def make_dirs(str_date):
-    os.mkdir(workspace + str_date)
+    dir_name = workspace + str_date
+    os.mkdir(dir_name)
     """
     path_list = ["Simple", "Diagonal", "Strict", "Oct-directional", "Flexible"]
     for path in path_list:
@@ -123,6 +124,8 @@ def main(strategy, disturbance_mode, gps_error_mode, filename):
     policy = strategy[1]
     distance_torelance = strategy[2][0]
     temp_distance_torelance = strategy[2][1]
+    if len(strategy) == 4:
+        k = strategy[3]
     total_step = parameter.total_step
     display_mode = parameter.state_display_mode
 
@@ -202,7 +205,6 @@ def main(strategy, disturbance_mode, gps_error_mode, filename):
             if policy == 0:
                 pass
             elif policy == 1 and temp_flag == 0 and is_First == 1:
-                k = 1
                 temp_goal = calculator.calc_temp_goal(k, current_point, next_goal)
                 next_goal = temp_goal
                 distance_torelance = temp_distance_torelance
@@ -271,7 +273,8 @@ title = "Flexible"
 control_mode = 1
 policy = 1
 torelance = [3.0, 1.5]
-strategy = [control_mode, policy, torelance]
+k = 2.0
+strategy = [control_mode, policy, torelance, k]
 main(strategy, disturbance_mode, gps_mode, title)
 initialize()
 robot.simulationSetMode(2) # First mode
