@@ -33,6 +33,52 @@ def omni_control_action(diff_distance, diff_deg):
     thrust = PD_distance_control(distance, e_distance)
     return thruster_direction, thrust
 
+def pull_omni_control_action(diff_distance, diff_deg):
+    def determine_cmd(diff_deg):
+        cmd = 0
+        if -45.0 <= diff_deg < 45:
+            cmd = 11
+
+        elif -180.0 <= diff_deg < -135.0 or 135.0 <= diff_deg < 180.0:
+            cmd = 12
+
+        elif 45.0 <= diff_deg < 135.0:
+            cmd = 13
+
+        elif -135.0 <= diff_deg < -45.0:
+            cmd = 14
+        return cmd
+    distance = diff_distance[-1]
+    deg = diff_deg[-1]
+    cmd = determine_cmd(deg)
+    thruster_direction = determine_thrust_direction(cmd)
+    e_distance = diff_distance[-2] - diff_distance[-1]
+    thrust = PD_distance_control(distance, e_distance)
+    return thruster_direction, thrust
+
+def push_omni_control_action(diff_distance, diff_deg):
+    def determine_cmd(diff_deg):
+        cmd = 0
+        if -45.0 <= diff_deg < 45:
+            cmd = 15
+
+        elif -180.0 <= diff_deg < -135.0 or 135.0 <= diff_deg < 180.0:
+            cmd = 16
+
+        elif 45.0 <= diff_deg < 135.0:
+            cmd = 17
+
+        elif -135.0 <= diff_deg < -45.0:
+            cmd = 18
+        return cmd
+    distance = diff_distance[-1]
+    deg = diff_deg[-1]
+    cmd = determine_cmd(deg)
+    thruster_direction = determine_thrust_direction(cmd)
+    e_distance = diff_distance[-2] - diff_distance[-1]
+    thrust = PD_distance_control(distance, e_distance)
+    return thruster_direction, thrust
+
 def diagonal_control_action(diff_distance, diff_deg):
     def determine_cmd(diff_distance, diff_deg):
         cmd = 0
@@ -56,6 +102,28 @@ def diagonal_control_action(diff_distance, diff_deg):
     thrust = PD_distance_control(distance, e_distance)
     return thruster_direction, thrust
 
+def diagonal_control_action(diff_distance, diff_deg):
+    def determine_cmd(diff_distance, diff_deg):
+        cmd = 0
+        if 0.0 <= diff_deg <90:
+            cmd = 7
+
+        elif -90 <= diff_deg < 0.0:
+            cmd = 8
+
+        elif -180 <= diff_deg < -90:
+            cmd = 9
+
+        elif 90 <= diff_deg < 180:
+            cmd = 10
+        return cmd
+    distance = diff_distance[-1]
+    deg = diff_deg[-1]
+    cmd = determine_cmd(distance, deg)
+    thruster_direction = determine_thrust_direction(cmd)
+    e_distance = diff_distance[-2] - diff_distance[-1]
+    thrust = PD_distance_control(distance, e_distance)
+    return thruster_direction, thrust
 def fixed_head_action(diff_distance, diff_deg):
     def determine_cmd(diff_distance, diff_deg):
         head_torelance = parameter.head_torelance
@@ -92,16 +160,16 @@ def oct_directional_action(diff_distance, diff_deg):
     def determine_cmd(diff_deg):
         cmd = 0
         if -22.0 <= diff_deg <22.0:
-            cmd = 1
+            cmd = 11
 
         elif -180.0 <= diff_deg < -157.0 or 157.0 <= diff_deg <= 180.0:
-            cmd = 2
+            cmd = 12
 
         elif -112.0 <= diff_deg < -67.0:
-            cmd = 4
+            cmd = 14
 
         elif 67.0 <= diff_deg < 112.0:
-            cmd = 3
+            cmd = 13
 
         elif 22.0 <= diff_deg < 67.0:
             cmd = 7
@@ -127,27 +195,43 @@ def determine_thrust_direction(cmd):
     # 1:forward, 2:backward, 3:left, 4:right, 5:CW, 6:CCW
     # 7:first quadrant, 8:second quadrant, 9:third quadrant, 10: fourth quadrant
     if cmd == 0:
-        thruster_direction = [0, 0, 0, 0]
+        thruster_direction = [0, 0, 0, 0] # Stop
     elif cmd == 1:
-        thruster_direction = [1, 1, -1, -1]
+        thruster_direction = [1, 1, -1, -1] # FBLR Positive
     elif cmd == 2:
-        thruster_direction = [-1, -1, 1, 1]
+        thruster_direction = [-1, -1, 1, 1] # FBLR Negative
     elif cmd == 3:
-        thruster_direction = [-1, 1, -1, 1]
+        thruster_direction = [-1, 1, -1, 1] # FBLR Right 
     elif cmd == 4:
-        thruster_direction = [1, -1, 1, -1]
+        thruster_direction = [1, -1, 1, -1] # FBLR Left
     elif cmd == 5:
-        thruster_direction = [1, -1, -1, 1]
+        thruster_direction = [1, -1, -1, 1] # CW
     elif cmd == 6:
-        thruster_direction = [-1, 1, 1, -1]
+        thruster_direction = [-1, 1, 1, -1] # CCW
     elif cmd == 7:
-        thruster_direction = [0, 1, -1, 0]
+        thruster_direction = [0, 1, -1, 0] # Diagonal First Quadrant
     elif cmd == 8:
-        thruster_direction = [1, 0, 0, -1]
+        thruster_direction = [1, 0, 0, -1] # Diagonal Second Quadrant
     elif cmd == 9:
-        thruster_direction = [0,-1, 1, 0]
+        thruster_direction = [0,-1, 1, 0] # Diagonal Third Quadrant
     elif cmd == 10:
-        thruster_direction = [-1, 0, 0, 1]
+        thruster_direction = [-1, 0, 0, 1] # Diagonal Fourth Quadrant
+    elif cmd == 11:
+        thruster_direction = [1, 1, 0, 0] # FBLR Pull Positive
+    elif cmd == 12:
+        thruster_direction = [0, 0, 1, 1] # FBLR Pull Negative
+    elif cmd == 13:
+        thruster_direction = [0, 1, 0, 1] # FBLR Pull Right 
+    elif cmd == 14:
+        thruster_direction = [1, 0, 1, 0] # FBLR Pull Left
+    elif cmd == 15:
+        thruster_direction = [0, 0, -1, -1] # FBLR Push Positive
+    elif cmd == 16:
+        thruster_direction = [-1, -1, 0, 0] # FBLR Push Negative
+    elif cmd == 17:
+        thruster_direction = [-1, 0, -1, 0] # FBLR Push Right 
+    elif cmd == 18:
+        thruster_direction = [0, -1, 0, -1] # FBLR Push Left
 
     if debug_mode == True:
         if cmd == 0:

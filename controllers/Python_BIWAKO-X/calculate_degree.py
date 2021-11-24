@@ -8,6 +8,7 @@ Created on Thu Sep 13 15:31:53 2018
 import math
 import numpy as np
 
+e_radius = 6378137.0
 # use Hubeny theory
 # e_radius is equatorial radius
 # p_radius is polar radius
@@ -95,6 +96,18 @@ def calc_temp_goal(k, current_point, target_point):
     temp_target = [temp_target[0][0], temp_target[0][1]]
     return temp_target
 
+def calc_flexible_temp_goal(current_point, target_point, prev_target, r):
+    lat_t = target_point[0]
+    lon_t = target_point[1]
+    earth_R = 6378137
+    theta = lat_t
+    ex = 360/(2*math.pi*earth_R*math.cos(theta*math.pi/180)) # keido, longitude 1[deg] = ex[m]
+    ey = 360/(2*math.pi*earth_R) # ido, latitude 1[deg] = ey[m]
+    bearing = calculate_bearing(current_point, prev_target)
+    lat_temp_next = lat_t+r*ey*math.sin(math.radians(90-bearing)) # 90-bearing means "coordinate transformation"
+    lon_temp_next = lon_t+r*ex*math.cos(math.radians(90-bearing)) # 90-bearing means "coordinate transformation"
+    target_point = np.array([lat_temp_next, lon_temp_next])
+    return target_point
 
 def calc_Watt(V, A, thruster_direction, timestep):
     T_count = 4 - thruster_direction.count(0) # count the number of used thrusters

@@ -99,6 +99,7 @@ def make_distance_log_file(path, m_a_diff_distance, m_t_diff_distance, m_diff_di
 
 def make_dirs(str_date):
     dir_name = workspace + str_date
+    print(dir_name)
     os.mkdir(dir_name)
     """
     path_list = ["Simple", "Diagonal", "Strict", "Oct-directional", "Flexible"]
@@ -123,6 +124,7 @@ def main(strategy, disturbance_mode, gps_error_mode, filename):
     control_mode = strategy[0]
     policy = strategy[1]
     distance_torelance = strategy[2][0]
+    main_distance_tolerance = strategy[2][0]
     temp_distance_torelance = strategy[2][1]
     if len(strategy) == 4:
         k = strategy[3]
@@ -192,9 +194,10 @@ def main(strategy, disturbance_mode, gps_error_mode, filename):
             if policy == 1:
                 if is_First == 0:
                     is_First = 1
+                    temp_goal = target_point[0]
                 temp_flag = 0
                 next_goal = target_point[0]
-                distance_torelance = 3.0
+                distance_torelance = main_distance_tolerance
             if debug_mode == True:
                 print("STAY")
 
@@ -205,14 +208,15 @@ def main(strategy, disturbance_mode, gps_error_mode, filename):
             if policy == 0:
                 pass
             elif policy == 1 and temp_flag == 0 and is_First == 1:
-                temp_goal = calculator.calc_temp_goal(k, current_point, next_goal)
+                temp_goal = calculator.calc_flexible_temp_goal(
+                    current_point, target_point[0], temp_goal, r=3)
                 next_goal = temp_goal
                 distance_torelance = temp_distance_torelance
                 distance = round(mpu.haversine_distance(current_point, next_goal), 5)*1000
                 temp_flag = 1
 
             if control_mode == 0:
-                thruster_direction, thrust = controller.omni_control_action(diff_distance, diff_deg)
+                thruster_direction, thrust = controller.push_omni_control_action(diff_distance, diff_deg)
             elif control_mode == 1:
                 thruster_direction, thrust = controller.diagonal_control_action(diff_distance, diff_deg)
             elif control_mode == 2:
@@ -270,11 +274,15 @@ gps_mode = parameter.gps_error_mode
 
 # main() for Unit test
 title = "Flexible"
-control_mode = 1
+# 0:FBLR MODE, 1:DIAGNALCONTROL MODE
+# 2:FIXED HEAD CONTROL MODE , 3: OCT-DIRECTIONAL
+control_mode = 3
+# 0:SIMPLE POLICY, 1:FLEXIBLE POLICY
 policy = 1
 torelance = [3.0, 1.5]
-k = 2.0
+k = 1.5
 strategy = [control_mode, policy, torelance, k]
+# strategy = [control_mode, policy, torelance]
 main(strategy, disturbance_mode, gps_mode, title)
 initialize()
 robot.simulationSetMode(2) # First mode
