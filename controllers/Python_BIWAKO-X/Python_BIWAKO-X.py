@@ -124,6 +124,7 @@ def main(strategy, disturbance_mode, gps_error_mode, filename):
     control_mode = strategy[0]
     policy = strategy[1]
     distance_torelance = strategy[2][0]
+    main_distance_tolerance = strategy[2][0]
     temp_distance_torelance = strategy[2][1]
     if len(strategy) == 4:
         k = strategy[3]
@@ -195,7 +196,7 @@ def main(strategy, disturbance_mode, gps_error_mode, filename):
                     is_First = 1
                 temp_flag = 0
                 next_goal = target_point[0]
-                distance_torelance = 3.0
+                distance_torelance = main_distance_tolerance
             if debug_mode == True:
                 print("STAY")
 
@@ -271,10 +272,13 @@ gps_mode = parameter.gps_error_mode
 
 # main() for Unit test
 title = "Flexible"
-control_mode = 1
+# 0:FBLR MODE, 1:DIAGNALCONTROL MODE
+# 2:FIXED HEAD CONTROL MODE , 3: OCT-DIRECTIONAL
+control_mode = 3
+# 0:SIMPLE POLICY, 1:FLEXIBLE POLICY
 policy = 1
-torelance = [3.0, 1.5]
-k = 0.5
+torelance = [5.0, 1.5]
+k = 1.5
 strategy = [control_mode, policy, torelance, k]
 # strategy = [control_mode, policy, torelance]
 main(strategy, disturbance_mode, gps_mode, title)
