@@ -160,16 +160,16 @@ def oct_directional_action(diff_distance, diff_deg):
     def determine_cmd(diff_deg):
         cmd = 0
         if -22.0 <= diff_deg <22.0:
-            cmd = 1
+            cmd = 11
 
         elif -180.0 <= diff_deg < -157.0 or 157.0 <= diff_deg <= 180.0:
-            cmd = 2
+            cmd = 12
 
         elif -112.0 <= diff_deg < -67.0:
-            cmd = 4
+            cmd = 14
 
         elif 67.0 <= diff_deg < 112.0:
-            cmd = 3
+            cmd = 13
 
         elif 22.0 <= diff_deg < 67.0:
             cmd = 7
