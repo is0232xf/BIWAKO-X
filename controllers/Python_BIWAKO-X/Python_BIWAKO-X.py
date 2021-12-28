@@ -126,8 +126,6 @@ def main(strategy, disturbance_mode, gps_error_mode, filename):
     distance_torelance = strategy[2][0]
     main_distance_tolerance = strategy[2][0]
     temp_distance_torelance = strategy[2][1]
-    if len(strategy) == 4:
-        k = strategy[3]
     total_step = parameter.total_step
     display_mode = parameter.state_display_mode
 
@@ -175,7 +173,7 @@ def main(strategy, disturbance_mode, gps_error_mode, filename):
         e_longitude = e_gps_value[0]
         a_current_point = [a_latitude, a_longitude]
         e_current_point = [e_latitude, e_longitude]
-
+        
         if gps_error_mode == True:
             current_point = e_current_point
         else:
@@ -209,7 +207,7 @@ def main(strategy, disturbance_mode, gps_error_mode, filename):
                 pass
             elif policy == 1 and temp_flag == 0 and is_First == 1:
                 temp_goal = calculator.calc_flexible_temp_goal(
-                    current_point, target_point[0], temp_goal, r=3)
+                    current_point, target_point[0], temp_goal, r=0.0)
                 next_goal = temp_goal
                 distance_torelance = temp_distance_torelance
                 distance = round(mpu.haversine_distance(current_point, next_goal), 5)*1000
@@ -232,7 +230,7 @@ def main(strategy, disturbance_mode, gps_error_mode, filename):
 
         if count % (total_step/5) == 0:
             if disturbance_mode == 0:
-                x = 0.05
+                x = 0.1
                 z = 0
             elif disturbance_mode == 1:
                 x = round(random.uniform(-0.3, 0.3), 2)
@@ -280,8 +278,7 @@ control_mode = 3
 # 0:SIMPLE POLICY, 1:FLEXIBLE POLICY
 policy = 1
 torelance = [3.0, 1.5]
-k = 1.5
-strategy = [control_mode, policy, torelance, k]
+strategy = [control_mode, policy, torelance]
 # strategy = [control_mode, policy, torelance]
 main(strategy, disturbance_mode, gps_mode, title)
 initialize()

@@ -212,7 +212,6 @@ def tiemseries_pos_plotter(str_date, title, diff_longitude, diff_latitude, count
 
 def make_any_timeseries_graph(csv_file):
     df = pd.read_csv(csv_file, index_col=0)
-    
     d1 = np.array(df[df.columns.values[0]].values.tolist())
     d2 = np.array(df[df.columns.values[1]].values.tolist())
     d3 = np.array(df[df.columns.values[2]].values.tolist())
