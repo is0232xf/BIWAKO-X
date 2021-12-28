@@ -224,8 +224,8 @@ def main(strategy, disturbance_mode, gps_error_mode, filename):
         set_thruster_vel(thruster_direction, thrust)
 
         # calculate E-energy
-        A = calculator.calc_amp(thrust)
-        W = calculator.calc_Watt(V, A, thruster_direction, TIME_STEP)
+        A = calculator.calc_amp(thrust, thruster_direction)
+        W = calculator.calc_Watt(V, A, TIME_STEP)
         P = P + W/1000 # 消費電力グラフの単位を[kJ]としているため1000で割る
 
         if count % (total_step/5) == 0:

@@ -79,15 +79,48 @@ def get_bearing_in_degree(compass_value):
     bearing = rad/math.pi*180
     return bearing
 
-def calc_amp(thrust):
+def calc_amp(thrust, thruster_direction):
+    cmd = calc_control_mode(thruster_direction)
     thrust = abs(thrust)
-    power = (thrust / 20)*100
-    # A = 4.3*power**2-1.08*power
-    A = 0.0005*power**2-0.0149*power+0.1012
-    # A = round(A, 2)
-    if power < 0.2:
-        A = 0.0
+    power = thrust/20
+    A = 0.0
+    if cmd == 0:
+        A = 0.085
+    elif cmd == 1:
+        if 0.0 <= power <= 3.0:
+            A = 16.03*power**2 - 1.41*power + 0.10
+        elif power > 3.0:
+            A = 1.37
+    elif cmd == 2:
+        if 0.0 <= power <= 3.0:
+            A = 7.96*power**2 - 0.76*power + 0.10
+        elif power > 3.0:
+            A = 0.74
+    elif cmd == 3 or 4:
+        if 0.0 <= power <= 3.0:
+            A = 8.20*power**2 - 0.58*power + 0.09
+        elif power > 3.0:
+            A = 0.78
     return A
+
+def calc_control_mode(thruster_dorection):
+    cmd = 0
+    zero_count = thruster_dorection.count(0)
+    thruster_count = 4 - zero_count
+    # cmd 0: stop, 1: 4thruster, 2: diagonal, 3: push, 4: pull
+    if thruster_count == 4:
+        cmd = 1
+    elif thruster_count == 2:
+        list_sum = sum(thruster_count)
+        if list_sum == 0:
+            cmd = 2
+        elif list_sum == 2:
+            cmd = 3
+        elif list_sum == -2:
+            cmd = 4
+    elif thruster_count == 0:
+        cmd = 0
+    return cmd
 
 def calc_temp_goal(k, current_point, target_point):
     current_point = np.array([current_point])
@@ -109,9 +142,7 @@ def calc_flexible_temp_goal(current_point, target_point, prev_target, r):
     target_point = np.array([lat_temp_next, lon_temp_next])
     return target_point
 
-def calc_Watt(V, A, thruster_direction, timestep):
-    T_count = 4 - thruster_direction.count(0) # count the number of used thrusters
+def calc_Watt(V, A, timestep):
     dt = timestep/1000 # 1[msec] = 0.001[sec]
-    c_W = 1.5 # [W/s]c_W means constant consumed energy by main computer
-    W = T_count * (V * A) * dt + c_W # unit Watt sec, 4 means use four thrusters
+    W = V * A * dt# unit Watt sec, 4 means use four thrusters
     return W
