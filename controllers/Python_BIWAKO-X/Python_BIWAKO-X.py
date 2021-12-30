@@ -152,6 +152,7 @@ def main(strategy, disturbance_mode, gps_error_mode, filename):
     count = 0.0
     temp_flag = 0
     is_First = 0
+    current_flag = 1
 
     if parameter.data_log_mode == True:
         param_file = workspace + str_date + "/" + filename + ".txt"
@@ -189,6 +190,7 @@ def main(strategy, disturbance_mode, gps_error_mode, filename):
         t_diff_distance.append(t_distance)
         a_diff_distance.append(a_distance)
         if diff_distance[-1] <= distance_torelance:
+            current_First = 0
             if policy == 1:
                 if is_First == 0:
                     is_First = 1
@@ -207,11 +209,12 @@ def main(strategy, disturbance_mode, gps_error_mode, filename):
                 pass
             elif policy == 1 and temp_flag == 0 and is_First == 1:
                 temp_goal = calculator.calc_flexible_temp_goal(
-                    current_point, target_point[0], temp_goal, r=0.0)
+                    current_point, target_point[0], temp_goal, r=3.0)
                 next_goal = temp_goal
                 distance_torelance = temp_distance_torelance
                 distance = round(mpu.haversine_distance(current_point, next_goal), 5)*1000
                 temp_flag = 1
+                current_flag = 1
 
             if control_mode == 0:
                 thruster_direction, thrust = controller.push_omni_control_action(diff_distance, diff_deg)
@@ -225,6 +228,10 @@ def main(strategy, disturbance_mode, gps_error_mode, filename):
 
         # calculate E-energy
         A = calculator.calc_amp(thrust, thruster_direction)
+        # if the thruster state shift from off to run, the current is employed the peak value
+        if diff_distance[-2] < main_distance_tolerance and diff_distance[-1] > distance_torelance and current_flag == 1:
+            A = calculator.calc_peak_amp(thrust, thruster_direction)
+            current_flag = 0
         W = calculator.calc_Watt(V, A, TIME_STEP)
         P = P + W/1000 # 消費電力グラフの単位を[kJ]としているため1000で割る
 
@@ -274,7 +281,7 @@ gps_mode = parameter.gps_error_mode
 title = "Flexible"
 # 0:FBLR MODE, 1:DIAGNALCONTROL MODE
 # 2:FIXED HEAD CONTROL MODE , 3: OCT-DIRECTIONAL
-control_mode = 3
+control_mode = 1
 # 0:SIMPLE POLICY, 1:FLEXIBLE POLICY
 policy = 1
 torelance = [3.0, 1.5]

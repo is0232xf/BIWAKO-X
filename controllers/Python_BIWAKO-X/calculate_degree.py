@@ -86,32 +86,74 @@ def calc_amp(thrust, thruster_direction):
     A = 0.0
     if cmd == 0:
         A = 0.085
+    # control mode is 4 thruster
     elif cmd == 1:
-        if 0.0 <= power <= 3.0:
+        if 0.0 <= power <= 0.3:
             A = 16.03*power**2 - 1.41*power + 0.10
-        elif power > 3.0:
+        elif power > 0.3:
             A = 1.37
+    # control mode is diadgonal
     elif cmd == 2:
-        if 0.0 <= power <= 3.0:
+        if 0.0 <= power <= 0.3:
             A = 7.96*power**2 - 0.76*power + 0.10
-        elif power > 3.0:
+        elif power > 0.3:
             A = 0.74
+    # control mode is push or pull
     elif cmd == 3 or 4:
-        if 0.0 <= power <= 3.0:
+        if 0.0 <= power <= 0.3:
             A = 8.20*power**2 - 0.58*power + 0.09
         elif power > 3.0:
             A = 0.78
     return A
 
-def calc_control_mode(thruster_dorection):
+def calc_peak_amp(thrust, thruster_direction):
+    cmd = calc_control_mode(thruster_direction)
+    thrust = abs(thrust)
+    power = thrust/20
+    A = 0.0
+    if cmd == 0:
+        A = 0.085
+    # control mode is 4 thruster
+    elif cmd == 1:
+        if 0.0 <= power <= 0.1:
+            A = 12.65*power + 0.085
+        elif 0.1 < power <= 0.2:
+            A = 2.0*power + 1.15
+        elif 0.2 < power <= 0.35:
+            A = 36.8*power - 5.81
+        elif power > 0.35:
+            A = 5.10
+    # control mode is diagonal
+    elif cmd == 2:
+        if 0.0 <= power <= 0.1:
+            A = 7.25*power + 0.085
+        elif 0.1 < power <= 0.2:
+            A = 0.7*power + 0.74
+        elif 0.2 < power <= 0.35:
+            A = 19.3*power - 2.98
+        elif power > 0.35:
+            A = 2.83
+    # control mode is push or pull
+    elif cmd == 3 or 4:
+        if 0.0 <= power <= 0.1:
+            A = 7.35*power + 0.085
+        elif 0.1 < power <= 0.2:
+            A = 2.0*power + 0.62
+        elif 0.2 < power <= 0.35:
+            A = 17.1*power - 2.4
+        elif power > 0.35:
+            A = 2.81
+    return A
+
+def calc_control_mode(thruster_direction):
     cmd = 0
-    zero_count = thruster_dorection.count(0)
+    zero_count = thruster_direction.count(0)
     thruster_count = 4 - zero_count
     # cmd 0: stop, 1: 4thruster, 2: diagonal, 3: push, 4: pull
     if thruster_count == 4:
         cmd = 1
     elif thruster_count == 2:
-        list_sum = sum(thruster_count)
+        list_sum = sum(thruster_direction)
         if list_sum == 0:
             cmd = 2
         elif list_sum == 2:
